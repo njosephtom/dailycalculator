@@ -179,6 +179,7 @@ export default function PregnancyCalculator() {
                   type="date"
                   value={lmpDate}
                   onChange={setLmpDate}
+                  autoFocus
                 />
                 <SelectField
                   label="Average cycle length"

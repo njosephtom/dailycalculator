@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useMemo } from "react";
 
 export default function InputField({
   label,
@@ -12,7 +12,27 @@ export default function InputField({
   suffix,
   id,
   className = "",
+  inputMode,
+  autoFocus,
+  onKeyDown,
 }) {
+  const [isFocused, setIsFocused] = useState(false);
+
+  const isNumeric = type === "number";
+  const shouldFormat = isNumeric;
+  const effectiveType = shouldFormat ? "text" : type;
+  const effectiveInputMode = inputMode ?? (isNumeric ? "decimal" : undefined);
+
+  const displayValue = useMemo(() => {
+    if (!shouldFormat || isFocused) return value;
+    const num = parseFloat(String(value).replace(/,/g, ""));
+    if (isNaN(num)) return value;
+    return num.toLocaleString("en-US", {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 10,
+    });
+  }, [shouldFormat, isFocused, value]);
+
   return (
     <div className={`flex flex-col gap-1 ${className}`}>
       {label && (
@@ -28,12 +48,20 @@ export default function InputField({
         )}
         <input
           id={id}
-          type={type}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
+          type={effectiveType}
+          inputMode={effectiveInputMode}
+          value={displayValue}
+          onChange={(e) => onChange(e.target.value.replace(/,/g, ""))}
           min={min}
           max={max}
           placeholder={placeholder}
+          autoFocus={autoFocus}
+          onKeyDown={onKeyDown}
+          onFocus={(e) => {
+            setIsFocused(true);
+            if (shouldFormat) e.target.select();
+          }}
+          onBlur={() => setIsFocused(false)}
           className={`w-full py-2 text-sm border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white placeholder-slate-400 transition-shadow hover:border-slate-300 dark:hover:border-slate-500 ${
             prefix ? "pl-7" : "pl-3"
           } ${suffix ? "pr-12" : "pr-3"}`}

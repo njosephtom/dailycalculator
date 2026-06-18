@@ -112,6 +112,7 @@ export default function AgeCalculator() {
                 type="date"
                 value={dob}
                 onChange={setDob}
+                autoFocus
               />
               <InputField
                 label="Calculate Age At"

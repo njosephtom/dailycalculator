@@ -114,7 +114,7 @@ export default function BmrCalculator() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <SelectField label="Biological Sex" id="sex" value={sex} onChange={setSex} options={SEX_OPTS}/>
-              <InputField  label="Age"            id="age" value={age} onChange={setAge} suffix="yrs" min="1" max="120"/>
+              <InputField  label="Age"            id="age" value={age} onChange={setAge} suffix="yrs" min="1" max="120" autoFocus/>
               {unit==="metric" ? (
                 <>
                   <InputField label="Weight" id="wkg" value={weightKg}  onChange={setWeightKg}  suffix="kg"/>

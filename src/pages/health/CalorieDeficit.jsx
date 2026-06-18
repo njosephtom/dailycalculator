@@ -303,6 +303,7 @@ export default function CalorieDeficit() {
                 suffix="yrs"
                 min="1"
                 max="120"
+                autoFocus
               />
 
               {unit === "metric" ? (

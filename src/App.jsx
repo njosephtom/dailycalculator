@@ -1,5 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
+import { Analytics } from "@vercel/analytics/react";
 import { ThemeProvider } from "./context/ThemeContext";
 import { CalculatorRegistryProvider } from "./context/CalculatorRegistryContext";
 import Layout from "./components/layout/Layout";
@@ -17,6 +18,8 @@ import InflationCalculator  from "./pages/finance/InflationCalculator";
 import SipCalculator        from "./pages/finance/SipCalculator";
 import LumpsumCalculator    from "./pages/finance/LumpsumCalculator";
 import GstCalculator        from "./pages/finance/GstCalculator";
+import TipCalculator        from "./pages/finance/TipCalculator";
+import DiscountCalculator   from "./pages/finance/DiscountCalculator";
 
 // Math
 import PercentageCalculator from "./pages/math/PercentageCalculator";
@@ -26,6 +29,7 @@ import FractionToDecimal    from "./pages/math/FractionToDecimal";
 // Misc
 import CubicYards           from "./pages/misc/CubicYards";
 import AgeCalculator        from "./pages/misc/AgeCalculator";
+import DateCalculator       from "./pages/misc/DateCalculator";
 
 // Health
 import BmiBmr               from "./pages/health/BmiBmr";
@@ -34,9 +38,15 @@ import BmrCalculator        from "./pages/health/BmrCalculator";
 import BodyFat              from "./pages/health/BodyFat";
 import PregnancyCalculator  from "./pages/health/PregnancyCalculator";
 import CalorieDeficit       from "./pages/health/CalorieDeficit";
+import TdeeCalculator       from "./pages/health/TdeeCalculator";
+import WaterIntake          from "./pages/health/WaterIntake";
 
 // Cooking
 import CookingConverter     from "./pages/cooking/CookingConverter";
+
+// Tech
+import AspectRatio          from "./pages/tech/AspectRatio";
+import ByteConverter        from "./pages/tech/ByteConverter";
 
 // Convert
 import LengthWeight         from "./pages/convert/LengthWeight";
@@ -64,6 +74,8 @@ export default function App() {
             <Route path="finance/sip-calculator"              element={<SipCalculator />} />
             <Route path="finance/lumpsum-calculator"          element={<LumpsumCalculator />} />
             <Route path="finance/gst-calculator"              element={<GstCalculator />} />
+            <Route path="finance/tip-calculator"              element={<TipCalculator />} />
+            <Route path="finance/discount-calculator"         element={<DiscountCalculator />} />
 
             {/* ── Math ── */}
             <Route path="math/percentage-calculator"          element={<PercentageCalculator />} />
@@ -73,6 +85,7 @@ export default function App() {
             {/* ── Misc ── */}
             <Route path="misc/cubic-yards-calculator"         element={<CubicYards />} />
             <Route path="misc/age-calculator"                element={<AgeCalculator />} />
+            <Route path="misc/date-calculator"               element={<DateCalculator />} />
 
             {/* ── Cooking ── */}
             <Route path="cooking/cooking-converter"           element={<CookingConverter />} />
@@ -84,6 +97,12 @@ export default function App() {
             <Route path="health/body-fat-calculator"         element={<BodyFat />} />
             <Route path="health/pregnancy-calculator"        element={<PregnancyCalculator />} />
             <Route path="health/calorie-deficit-calculator"  element={<CalorieDeficit />} />
+            <Route path="health/tdee-calculator"             element={<TdeeCalculator />} />
+            <Route path="health/water-intake-calculator"     element={<WaterIntake />} />
+
+            {/* ── Tech ── */}
+            <Route path="tech/aspect-ratio-calculator"       element={<AspectRatio />} />
+            <Route path="tech/byte-converter"                element={<ByteConverter />} />
 
             {/* ── Convert ── */}
             <Route path="convert/length-weight"              element={<LengthWeight />} />
@@ -94,6 +113,7 @@ export default function App() {
             <Route path="*" element={<ComingSoon />} />
           </Route>
         </Routes>
+        <Analytics />
       </CalculatorRegistryProvider>
     </ThemeProvider>
   );

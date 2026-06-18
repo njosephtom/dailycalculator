@@ -87,6 +87,26 @@ export const calculatorRegistry = [
     tags: ["gst", "tax", "india", "goods and services tax", "inclusive", "exclusive"],
   },
   {
+    id: "tip-calculator",
+    name: "Tip / Split Bill Calculator",
+    path: "/finance/tip-calculator",
+    category: "finance",
+    subcategory: "Other Finance",
+    implemented: true,
+    description: "Calculate tip amount and split the bill evenly or unevenly among any number of people.",
+    tags: ["tip", "split", "bill", "restaurant", "gratuity", "share", "divide"],
+  },
+  {
+    id: "discount-calculator",
+    name: "Discount & Sales Tax Calculator",
+    path: "/finance/discount-calculator",
+    category: "finance",
+    subcategory: "Other Finance",
+    implemented: true,
+    description: "Calculate the final price after applying a discount percentage and sales tax rate.",
+    tags: ["discount", "sales tax", "price", "savings", "coupon", "markdown", "tax"],
+  },
+  {
     id: "inflation-calculator",
     name: "Inflation Calculator",
     path: "/finance/inflation-calculator",
@@ -144,6 +164,15 @@ export const calculatorRegistry = [
     implemented: true,
     description: "Calculate your exact age in years, months, days, hours — plus zodiac sign, milestones, and birthday countdown.",
     tags: ["age", "birthday", "date of birth", "zodiac", "milestone", "days old", "countdown"],
+  },
+  {
+    id: "date-calculator",
+    name: "Date / Time Calculator",
+    path: "/misc/date-calculator",
+    category: "misc",
+    implemented: true,
+    description: "Calculate days between two dates or add/subtract days, weeks, and months from any date. Includes business days count.",
+    tags: ["date", "time", "days between", "deadline", "business days", "add days", "subtract", "calendar"],
   },
 
   // ─── COOKING ──────────────────────────────────────────────────────────────
@@ -212,6 +241,24 @@ export const calculatorRegistry = [
     description: "Calculate your TDEE, BMR, and safe calorie deficit plans with macro breakdowns for weight loss goals.",
     tags: ["calories", "deficit", "weight loss", "TDEE", "BMR", "macros", "diet", "fitness"],
   },
+  {
+    id: "tdee-calculator",
+    name: "Calorie / TDEE Calculator",
+    path: "/health/tdee-calculator",
+    category: "health",
+    implemented: true,
+    description: "Calculate Total Daily Energy Expenditure based on age, gender, weight, height, and activity level with meal and macro breakdowns.",
+    tags: ["TDEE", "calories", "BMR", "energy", "metabolism", "macros", "meal plan", "fitness"],
+  },
+  {
+    id: "water-intake-calculator",
+    name: "Water Intake Calculator",
+    path: "/health/water-intake-calculator",
+    category: "health",
+    implemented: true,
+    description: "Calculate your daily hydration goal based on weight, climate, exercise intensity, and special conditions.",
+    tags: ["water", "hydration", "intake", "glasses", "health", "fitness", "climate", "exercise"],
+  },
 
   // ─── CONVERT ──────────────────────────────────────────────────────────────
   {
@@ -240,6 +287,26 @@ export const calculatorRegistry = [
     implemented: true,
     description: "Convert between mm, cm, m, km, inches, feet, yards, and miles with a full conversion table.",
     tags: ["length", "distance", "meters", "feet", "inches", "miles", "km", "convert"],
+  },
+
+  // ─── TECH ─────────────────────────────────────────────────────────────────
+  {
+    id: "aspect-ratio-calculator",
+    name: "Aspect Ratio Calculator",
+    path: "/tech/aspect-ratio-calculator",
+    category: "tech",
+    implemented: true,
+    description: "Find simplified aspect ratios and scale dimensions while preserving proportions — essential for design and video.",
+    tags: ["aspect ratio", "resolution", "16:9", "4:3", "scale", "design", "video", "responsive"],
+  },
+  {
+    id: "byte-converter",
+    name: "Byte / Data Converter",
+    path: "/tech/byte-converter",
+    category: "tech",
+    implemented: true,
+    description: "Convert between bits, bytes, KB, MB, GB, TB, and PB in both decimal (SI) and binary (IEC) standards.",
+    tags: ["byte", "data", "KB", "MB", "GB", "TB", "convert", "binary", "storage", "file size"],
   },
 ];
 
@@ -279,5 +346,11 @@ export const categoryMeta = {
     description: "Practical everyday calculators for construction, materials, and general use.",
     icon: "Wrench",
     color: "amber",
+  },
+  tech: {
+    label: "Tech",
+    description: "Developer and designer tools for aspect ratios, data conversions, and more.",
+    icon: "Monitor",
+    color: "violet",
   },
 };

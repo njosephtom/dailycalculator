@@ -78,7 +78,7 @@ export default function AprCalculator() {
           {/* Input form card */}
           <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5 space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <InputField label="Loan Amount"          id="la" value={loanAmt} onChange={setLoanAmt} prefix="$"/>
+              <InputField label="Loan Amount"          id="la" value={loanAmt} onChange={setLoanAmt} prefix="$" autoFocus/>
               <InputField label="Fees / Closing Costs" id="fe" value={fees}    onChange={setFees}    prefix="$"/>
               <InputField label="Loan Term (months)"   id="tm" value={termMos} onChange={setTermMos} min="1"/>
             </div>

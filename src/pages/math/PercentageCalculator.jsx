@@ -92,7 +92,7 @@ export default function PercentageCalculator() {
             <ModeCard title="What is X% of Y?">
               <div className="flex flex-wrap items-end gap-3">
                 <span className="text-sm text-slate-500 dark:text-slate-400 pb-2">What is</span>
-                <InputField id="a1" value={a1} onChange={setA1} suffix="%" className="w-28" />
+                <InputField id="a1" value={a1} onChange={setA1} suffix="%" className="w-28" autoFocus />
                 <span className="text-sm text-slate-500 dark:text-slate-400 pb-2">of</span>
                 <InputField id="b1" value={b1} onChange={setB1} className="w-28" />
                 <span className="text-sm text-slate-500 dark:text-slate-400 pb-2">?</span>

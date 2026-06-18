@@ -136,7 +136,7 @@ export default function SavingsCalculator() {
           <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5 space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <SelectField label="Currency" id="cur" value={currency} onChange={setCurrency} options={currencyOpts} />
-              <InputField  label="Initial Balance" id="principal" value={principal} onChange={setPrincipal} prefix={sym} className="sm:col-span-2"/>
+              <InputField  label="Initial Balance" id="principal" value={principal} onChange={setPrincipal} prefix={sym} className="sm:col-span-2" autoFocus/>
             </div>
 
             {/* Rate */}

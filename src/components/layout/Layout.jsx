@@ -1,15 +1,36 @@
 import React, { useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { Menu } from "lucide-react";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 import Footer from "./Footer";
+import PageSEO from "../ui/PageSEO";
+import { calculatorRegistry, categoryMeta } from "../../data/calculatorRegistry";
+
+function usePageSEO() {
+  const { pathname } = useLocation();
+  const calc = calculatorRegistry.find(c => c.path === pathname);
+  if (calc) {
+    return { title: calc.name, description: calc.description, path: calc.path };
+  }
+  const catKey = pathname.replace(/^\//, "");
+  const cat = categoryMeta[catKey];
+  if (cat) {
+    return { title: `${cat.label} Calculators`, description: cat.description, path: pathname };
+  }
+  if (pathname === "/") {
+    return { title: null, description: "Free online calculators for finance, health, math, cooking, tech, and everyday tools.", path: "/" };
+  }
+  return { title: "Calculator", description: null, path: pathname };
+}
 
 export default function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const seo = usePageSEO();
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 transition-colors duration-200 flex flex-col">
+      <PageSEO title={seo.title} description={seo.description} path={seo.path} />
       <Header />
 
       <div className="flex flex-1 w-full max-w-7xl mx-auto">

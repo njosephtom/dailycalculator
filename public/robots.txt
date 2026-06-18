@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://dailycalculator.vercel.app/sitemap.xml

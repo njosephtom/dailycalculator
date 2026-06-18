@@ -89,7 +89,7 @@ export default function PercentageChange() {
 
             {mode === "change" ? (
               <div className="grid grid-cols-2 gap-4">
-                <InputField label="Initial Value" id="initial" value={initial} onChange={setInitial} />
+                <InputField label="Initial Value" id="initial" value={initial} onChange={setInitial} autoFocus />
                 <InputField label="Final Value" id="final" value={final} onChange={setFinal} />
               </div>
             ) : (

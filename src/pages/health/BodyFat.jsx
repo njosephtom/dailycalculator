@@ -108,10 +108,10 @@ export default function BodyFat() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {unit==="metric" ? (
-                <InputField label={measureLabel("Height")} id="h" value={height}  onChange={setHeight}  min="100" max="250"/>
+                <InputField label={measureLabel("Height")} id="h" value={height}  onChange={setHeight}  min="100" max="250" autoFocus/>
               ) : (
                 <div className="flex gap-2">
-                  <InputField label="Height (ft)" id="hft" value={heightFt} onChange={setHeightFt} suffix="ft"/>
+                  <InputField label="Height (ft)" id="hft" value={heightFt} onChange={setHeightFt} suffix="ft" autoFocus/>
                   <InputField label="(in)"        id="hin" value={heightIn} onChange={setHeightIn} suffix="in" className="mt-auto"/>
                 </div>
               )}

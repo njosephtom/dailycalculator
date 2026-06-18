@@ -160,7 +160,7 @@ export default function SimpleInterest() {
               <SectionLabel text="Principal & Rate" />
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <SelectField label="Currency" id="currency" value={currency} onChange={setCurrency} options={currencyOptions} />
-                <InputField label="Principal Amount" id="principal" value={principal} onChange={setPrincipal} prefix={sym} className="sm:col-span-2" />
+                <InputField label="Principal Amount" id="principal" value={principal} onChange={setPrincipal} prefix={sym} className="sm:col-span-2" autoFocus />
               </div>
               <div className="mt-4 flex flex-col gap-2">
                 <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Interest Rate</label>

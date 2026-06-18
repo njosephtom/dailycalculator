@@ -207,7 +207,7 @@ export default function CompoundInterest() {
           <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5 space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <SelectField  label="Currency"             id="cur"  value={currency}  onChange={setCurrency}  options={CUR_OPTS}/>
-              <InputField   label="Initial Amount"        id="p"    value={principal} onChange={setPrincipal} prefix={sym}/>
+              <InputField   label="Initial Amount"        id="p"    value={principal} onChange={setPrincipal} prefix={sym} autoFocus/>
               <InputField   label="Annual Interest Rate"  id="rate" value={rate}      onChange={setRate}      suffix="%"/>
               <SelectField  label="Compounding Frequency" id="cf"   value={compFreq}  onChange={setCompFreq}  options={COMP_OPTS}/>
               <InputField   label="Years"                 id="yrs"  value={years}     onChange={setYears}     min="0"/>

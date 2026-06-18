@@ -96,12 +96,12 @@ export default function BmiCalculator() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {unit==="metric" ? (
                 <>
-                  <InputField label="Weight" id="wkg"  value={weightKg}  onChange={setWeightKg}  suffix="kg"/>
+                  <InputField label="Weight" id="wkg"  value={weightKg}  onChange={setWeightKg}  suffix="kg" autoFocus/>
                   <InputField label="Height" id="hcm"  value={heightCm}  onChange={setHeightCm}  suffix="cm"/>
                 </>
               ) : (
                 <>
-                  <InputField label="Weight"      id="wlbs" value={weightLbs} onChange={setWeightLbs} suffix="lbs"/>
+                  <InputField label="Weight"      id="wlbs" value={weightLbs} onChange={setWeightLbs} suffix="lbs" autoFocus/>
                   <div className="flex gap-2">
                     <InputField label="Height (ft)" id="hft"  value={heightFt}  onChange={setHeightFt}  suffix="ft"/>
                     <InputField label="(in)"        id="hin"  value={heightIn}  onChange={setHeightIn}  suffix="in" className="mt-auto"/>

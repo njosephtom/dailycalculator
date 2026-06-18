@@ -101,7 +101,7 @@ export default function InflationCalculator() {
                   className="py-2 px-2 text-sm border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white">
                   {currencyOpts.map(o=><option key={o.value} value={o.value}>{o.label}</option>)}
                 </select>
-                <InputField label="" id="amt" value={amount} onChange={setAmount} prefix={sym} className="flex-1"/>
+                <InputField label="" id="amt" value={amount} onChange={setAmount} prefix={sym} className="flex-1" autoFocus/>
               </div>
               <InputField label="Annual Inflation Rate" id="rate" value={rate} onChange={setRate} suffix="%"/>
               <InputField label="Time Period (years)"   id="yrs"  value={years} onChange={setYears} min="1" max="100"/>

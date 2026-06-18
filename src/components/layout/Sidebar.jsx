@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   DollarSign, Calculator, ChefHat, Heart,
-  ArrowLeftRight, Wrench, ChevronDown, ChevronRight, X,
+  ArrowLeftRight, Wrench, Monitor, ChevronDown, ChevronRight, X,
 } from "lucide-react";
 import { calculatorRegistry, categoryMeta } from "../../data/calculatorRegistry";
 
-const ICON_MAP = { DollarSign, Calculator, ChefHat, Heart, ArrowLeftRight, Wrench };
+const ICON_MAP = { DollarSign, Calculator, ChefHat, Heart, ArrowLeftRight, Wrench, Monitor };
 
 const COLOR = {
   emerald: { icon: "text-emerald-600 dark:text-emerald-400", bg: "bg-emerald-50 dark:bg-emerald-900/20", active: "text-emerald-700 dark:text-emerald-300" },
@@ -15,9 +15,10 @@ const COLOR = {
   rose:    { icon: "text-rose-500 dark:text-rose-400",       bg: "bg-rose-50 dark:bg-rose-900/20",       active: "text-rose-700 dark:text-rose-300"      },
   blue:    { icon: "text-blue-600 dark:text-blue-400",       bg: "bg-blue-50 dark:bg-blue-900/20",       active: "text-blue-700 dark:text-blue-300"      },
   amber:   { icon: "text-amber-500 dark:text-amber-400",     bg: "bg-amber-50 dark:bg-amber-900/20",     active: "text-amber-700 dark:text-amber-300"    },
+  violet:  { icon: "text-violet-600 dark:text-violet-400",  bg: "bg-violet-50 dark:bg-violet-900/20",  active: "text-violet-700 dark:text-violet-300"  },
 };
 
-const CATEGORY_ORDER = ["finance", "math", "health", "cooking", "convert", "misc"];
+const CATEGORY_ORDER = ["finance", "math", "health", "cooking", "convert", "tech", "misc"];
 
 const grouped = CATEGORY_ORDER.reduce((acc, cat) => {
   acc[cat] = calculatorRegistry.filter((c) => c.category === cat);

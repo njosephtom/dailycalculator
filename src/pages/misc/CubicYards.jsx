@@ -120,7 +120,7 @@ export default function CubicYards() {
             {/* Dimension or area inputs */}
             {mode === "dimensions" ? (
               <div className="grid grid-cols-2 gap-4">
-                <InputField label="Length (ft)" id="len" value={lengthFt} onChange={setLengthFt} min="0" />
+                <InputField label="Length (ft)" id="len" value={lengthFt} onChange={setLengthFt} min="0" autoFocus />
                 <InputField label="Width (ft)"  id="wid" value={widthFt}  onChange={setWidthFt}  min="0" />
               </div>
             ) : (
