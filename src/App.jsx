@@ -1,5 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
+import { Analytics } from "@vercel/analytics/react";
 import { ThemeProvider } from "./context/ThemeContext";
 import { CalculatorRegistryProvider } from "./context/CalculatorRegistryContext";
 import Layout from "./components/layout/Layout";
@@ -94,6 +95,7 @@ export default function App() {
             <Route path="*" element={<ComingSoon />} />
           </Route>
         </Routes>
+        <Analytics />
       </CalculatorRegistryProvider>
     </ThemeProvider>
   );
