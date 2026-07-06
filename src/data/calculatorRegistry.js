@@ -145,6 +145,15 @@ export const calculatorRegistry = [
     description: "Convert any fraction or mixed number to a decimal, percentage, and simplified form.",
     tags: ["fraction", "decimal", "convert", "math", "mixed number", "simplify", "percentage"],
   },
+  {
+    id: "numbers-to-words-converter",
+    name: "Numbers to Words Converter",
+    path: "/math/numbers-to-words-converter",
+    category: "math",
+    implemented: true,
+    description: "Convert numbers to words in multiple regional formats — North America, India, Standard, and European systems.",
+    tags: ["numbers to words", "number words", "spell out", "north america", "india", "crore", "lakh", "numbering system"],
+  },
 
   // ─── MISC ─────────────────────────────────────────────────────────────────
   {

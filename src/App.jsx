@@ -25,6 +25,7 @@ import DiscountCalculator   from "./pages/finance/DiscountCalculator";
 import PercentageCalculator from "./pages/math/PercentageCalculator";
 import PercentageChange     from "./pages/math/PercentageChange";
 import FractionToDecimal    from "./pages/math/FractionToDecimal";
+import NumbersToWords       from "./pages/math/NumbersToWords";
 
 // Misc
 import CubicYards           from "./pages/misc/CubicYards";
@@ -81,6 +82,7 @@ export default function App() {
             <Route path="math/percentage-calculator"          element={<PercentageCalculator />} />
             <Route path="math/percentage-change-calculator"  element={<PercentageChange />} />
             <Route path="math/fraction-to-decimal-calculator" element={<FractionToDecimal />} />
+            <Route path="math/numbers-to-words-converter"     element={<NumbersToWords />} />
 
             {/* ── Misc ── */}
             <Route path="misc/cubic-yards-calculator"         element={<CubicYards />} />
