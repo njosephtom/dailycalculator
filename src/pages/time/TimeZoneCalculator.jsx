@@ -1,26 +1,35 @@
 import React, { useState, useEffect } from "react";
 import { X, Plus, Clock, ChevronUp, ChevronDown } from "lucide-react";
 
-const COMMON_TIMEZONES = [
-  { name: "London", timezone: "Europe/London", code: "GMT/BST" },
-  { name: "New York", timezone: "America/New_York", code: "EST/EDT" },
-  { name: "Los Angeles", timezone: "America/Los_Angeles", code: "PST/PDT" },
-  { name: "Tokyo", timezone: "Asia/Tokyo", code: "JST" },
-  { name: "Sydney", timezone: "Australia/Sydney", code: "AEDT/AEST" },
-  { name: "Dubai", timezone: "Asia/Dubai", code: "GST" },
-  { name: "Singapore", timezone: "Asia/Singapore", code: "SGT" },
-  { name: "Hong Kong", timezone: "Asia/Hong_Kong", code: "HKT" },
-  { name: "Bangkok", timezone: "Asia/Bangkok", code: "ICT" },
-  { name: "Mumbai", timezone: "Asia/Kolkata", code: "IST" },
-  { name: "Cairo", timezone: "Africa/Cairo", code: "EET/EEST" },
-  { name: "Moscow", timezone: "Europe/Moscow", code: "MSK" },
-  { name: "Berlin", timezone: "Europe/Berlin", code: "CET/CEST" },
-  { name: "Paris", timezone: "Europe/Paris", code: "CET/CEST" },
-  { name: "Toronto", timezone: "America/Toronto", code: "EST/EDT" },
-  { name: "Mexico City", timezone: "America/Mexico_City", code: "CST/CDT" },
-  { name: "São Paulo", timezone: "America/Sao_Paulo", code: "BRT/BRST" },
-  { name: "Buenos Aires", timezone: "America/Argentina/Buenos_Aires", code: "ART" },
-  { name: "Auckland", timezone: "Pacific/Auckland", code: "NZDT/NZST" },
+const GEONAMES_USERNAME = "demo"; // Using demo account - replace with your own for production
+
+const fetchCitiesFromGeoNames = async (searchTerm) => {
+  if (!searchTerm || searchTerm.length < 1) return [];
+
+  try {
+    const response = await fetch(
+      `http://api.geonames.org/searchJSON?name_startsWith=${encodeURIComponent(searchTerm)}&featureClass=P&maxRows=10&username=${GEONAMES_USERNAME}`
+    );
+    const data = await response.json();
+
+    if (!data.geonames) return [];
+
+    return data.geonames.map((city) => ({
+      name: city.name,
+      timezone: city.timezone || "UTC",
+      code: city.countryCode || "XX",
+      country: city.countryName || "",
+    }));
+  } catch (error) {
+    console.error("Error fetching cities from GeoNames:", error);
+    return [];
+  }
+};
+
+const DEFAULT_CITIES = [
+  { name: "London", timezone: "Europe/London", code: "GB", country: "United Kingdom" },
+  { name: "Cairo", timezone: "Africa/Cairo", code: "EG", country: "Egypt" },
+  { name: "Moscow", timezone: "Europe/Moscow", code: "RU", country: "Russia" },
 ];
 
 function getTimeInTimezone(baseDate, baseTimezone, targetTimezone) {
@@ -151,13 +160,28 @@ function CityTimeline({ city, selectedDate, selectedHour, onSelectHour, isHome, 
 function CitySelector({ onAdd, addedCities }) {
   const [search, setSearch] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const [results, setResults] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const filtered = COMMON_TIMEZONES.filter(
-    tz => !addedCities.some(c => c.timezone === tz.timezone) &&
-           (tz.name.toLowerCase().includes(search.toLowerCase()) ||
-            tz.timezone.toLowerCase().includes(search.toLowerCase()) ||
-            tz.code.toLowerCase().includes(search.toLowerCase()))
-  );
+  const handleSearch = async (value) => {
+    setSearch(value);
+
+    if (!value || value.length < 1) {
+      setResults([]);
+      return;
+    }
+
+    setIsLoading(true);
+    const cities = await fetchCitiesFromGeoNames(value);
+
+    // Filter out already added cities
+    const filtered = cities.filter(
+      city => !addedCities.some(c => c.timezone === city.timezone)
+    );
+
+    setResults(filtered);
+    setIsLoading(false);
+  };
 
   return (
     <div className="relative mb-4">
@@ -167,7 +191,7 @@ function CitySelector({ onAdd, addedCities }) {
           placeholder="Place or timezone"
           value={search}
           onChange={(e) => {
-            setSearch(e.target.value);
+            handleSearch(e.target.value);
             setIsOpen(true);
           }}
           onFocus={() => setIsOpen(true)}
@@ -175,7 +199,10 @@ function CitySelector({ onAdd, addedCities }) {
         />
         {search && (
           <button
-            onClick={() => setSearch("")}
+            onClick={() => {
+              setSearch("");
+              setResults([]);
+            }}
             className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
           >
             <X size={16} />
@@ -185,24 +212,36 @@ function CitySelector({ onAdd, addedCities }) {
 
       {isOpen && (
         <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg z-10 max-h-64 overflow-y-auto">
-          {filtered.length > 0 ? (
-            filtered.map((tz) => (
+          {isLoading ? (
+            <div className="px-4 py-4 text-center text-sm text-slate-500 dark:text-slate-400">
+              <div className="inline-block animate-spin rounded-full h-4 w-4 border-2 border-indigo-500 border-t-transparent"></div>
+              <p className="mt-2">Searching cities...</p>
+            </div>
+          ) : results.length > 0 ? (
+            results.map((city) => (
               <button
-                key={tz.timezone}
+                key={`${city.timezone}-${city.name}`}
                 onClick={() => {
-                  onAdd(tz);
+                  onAdd(city);
                   setSearch("");
+                  setResults([]);
                   setIsOpen(false);
                 }}
-                className="w-full text-left px-4 py-2 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-colors text-sm border-b border-slate-100 dark:border-slate-700 last:border-0"
+                className="w-full text-left px-4 py-3 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-colors text-sm border-b border-slate-100 dark:border-slate-700 last:border-0"
               >
-                <p className="font-medium text-slate-900 dark:text-white">{tz.name}</p>
-                <p className="text-xs text-slate-500 dark:text-slate-400">{tz.timezone} • {tz.code}</p>
+                <p className="font-medium text-slate-900 dark:text-white">{city.name}</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  {city.country} • {city.timezone}
+                </p>
               </button>
             ))
-          ) : (
+          ) : search.length > 0 ? (
             <div className="px-4 py-3 text-center text-sm text-slate-500 dark:text-slate-400">
               No cities found
+            </div>
+          ) : (
+            <div className="px-4 py-3 text-center text-sm text-slate-500 dark:text-slate-400">
+              Start typing to search for cities...
             </div>
           )}
         </div>
@@ -215,11 +254,7 @@ export default function TimeZoneCalculator() {
   const [currentTime] = useState(new Date());
   const [selectedHour, setSelectedHour] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
-  const [cities, setCities] = useState([
-    { name: "London", timezone: "Europe/London", code: "GMT/BST" },
-    { name: "Cairo", timezone: "Africa/Cairo", code: "EET/EEST" },
-    { name: "Moscow", timezone: "Europe/Moscow", code: "MSK" },
-  ]);
+  const [cities, setCities] = useState(DEFAULT_CITIES);
 
   useEffect(() => {
     const timer = setInterval(() => {
