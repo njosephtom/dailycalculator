@@ -183,6 +183,15 @@ export const calculatorRegistry = [
     description: "Calculate days between two dates or add/subtract days, weeks, and months from any date. Includes business days count.",
     tags: ["date", "time", "days between", "deadline", "business days", "add days", "subtract", "calendar"],
   },
+  {
+    id: "time-zone-calculator",
+    name: "Time Zone Calculator",
+    path: "/time/time-zone-calculator",
+    category: "time",
+    implemented: true,
+    description: "Compare current times across different cities and time zones worldwide. Add multiple cities to see their times simultaneously with automatic DST adjustment.",
+    tags: ["time zone", "timezone", "world time", "utc", "daylight saving", "dst", "international time", "clock"],
+  },
 
   // ─── COOKING ──────────────────────────────────────────────────────────────
   {

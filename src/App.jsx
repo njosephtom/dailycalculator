@@ -30,6 +30,7 @@ import NumbersToWords       from "./pages/math/NumbersToWords";
 // Time
 import AgeCalculator        from "./pages/misc/AgeCalculator";
 import DateCalculator       from "./pages/misc/DateCalculator";
+import TimeZoneCalculator   from "./pages/time/TimeZoneCalculator";
 
 // Misc
 import CubicYards           from "./pages/misc/CubicYards";
@@ -89,6 +90,7 @@ export default function App() {
             {/* ── Time ── */}
             <Route path="time/age-calculator"                element={<AgeCalculator />} />
             <Route path="time/date-calculator"               element={<DateCalculator />} />
+            <Route path="time/time-zone-calculator"          element={<TimeZoneCalculator />} />
 
             {/* ── Misc ── */}
             <Route path="misc/cubic-yards-calculator"         element={<CubicYards />} />
