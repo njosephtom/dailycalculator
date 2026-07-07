@@ -162,6 +162,7 @@ function CitySelector({ onAdd, addedCities }) {
   const [isOpen, setIsOpen] = useState(false);
   const [results, setResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const selectorRef = React.useRef(null);
 
   const handleSearch = async (value) => {
     setSearch(value);
@@ -183,8 +184,27 @@ function CitySelector({ onAdd, addedCities }) {
     setIsLoading(false);
   };
 
+  const closeDropdown = () => {
+    setIsOpen(false);
+  };
+
+  React.useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (selectorRef.current && !selectorRef.current.contains(event.target)) {
+        closeDropdown();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }
+  }, [isOpen]);
+
   return (
-    <div className="relative mb-4">
+    <div className="relative mb-4" ref={selectorRef}>
       <div className="relative">
         <input
           type="text"
