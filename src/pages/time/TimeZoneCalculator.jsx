@@ -77,29 +77,29 @@ function CityTimeline({ city, currentTime, onRemove }) {
     <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden">
       <div className="flex">
         {/* Left info section */}
-        <div className="w-48 border-r border-slate-200 dark:border-slate-700 p-4 flex flex-col justify-center shrink-0">
-          <div className="flex items-baseline gap-2 mb-1">
-            <h3 className="font-semibold text-slate-800 dark:text-slate-100">{city.name}</h3>
-            <span className="text-xs uppercase tracking-wider font-medium text-slate-500 dark:text-slate-400">{city.code}</span>
+        <div className="w-32 border-r border-slate-200 dark:border-slate-700 p-4 flex flex-col justify-center shrink-0">
+          <div className="flex items-baseline gap-1.5 mb-1">
+            <h3 className="font-semibold text-sm text-slate-800 dark:text-slate-100">{city.name}</h3>
+            <span className="text-[10px] uppercase tracking-wider font-medium text-slate-500 dark:text-slate-400">{city.code}</span>
           </div>
-          <p className="text-2xl font-bold text-indigo-600 dark:text-indigo-400 font-mono mb-1">
+          <p className="text-xl font-bold text-indigo-600 dark:text-indigo-400 font-mono mb-0.5">
             {timeString}
           </p>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 mb-2">
             {dateString}
           </p>
           <button
             onClick={() => onRemove(city.timezone)}
-            className="mt-2 p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors w-fit"
+            className="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors w-fit"
             aria-label="Remove city"
           >
-            <X size={16} />
+            <X size={14} />
           </button>
         </div>
 
         {/* Timeline section */}
-        <div className="flex-1 p-4 overflow-x-auto scrollbar-hide">
-          <div className="flex gap-1">
+        <div className="flex-1 px-3 py-3 overflow-x-auto">
+          <div className="flex gap-0.5">
             {hours.map((hour) => {
               const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
               const period = hour < 12 ? 'am' : 'pm';
@@ -108,15 +108,15 @@ function CityTimeline({ city, currentTime, onRemove }) {
               return (
                 <div
                   key={hour}
-                  className={`flex-shrink-0 w-10 h-10 rounded-md flex items-center justify-center text-[10px] font-bold transition-colors ${
+                  className={`flex-shrink-0 w-8 h-12 rounded-md flex items-center justify-center text-[9px] font-bold transition-colors ${
                     isNow
                       ? 'bg-indigo-600 dark:bg-indigo-500 text-white'
                       : 'bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300'
                   }`}
                 >
                   <span className="text-center leading-tight">
-                    <div>{displayHour}</div>
-                    <div className="text-[8px]">{period}</div>
+                    <div className="text-[10px]">{displayHour}</div>
+                    <div className="text-[7px]">{period}</div>
                   </span>
                 </div>
               );
