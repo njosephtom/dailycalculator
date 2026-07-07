@@ -27,10 +27,12 @@ import PercentageChange     from "./pages/math/PercentageChange";
 import FractionToDecimal    from "./pages/math/FractionToDecimal";
 import NumbersToWords       from "./pages/math/NumbersToWords";
 
-// Misc
-import CubicYards           from "./pages/misc/CubicYards";
+// Time
 import AgeCalculator        from "./pages/misc/AgeCalculator";
 import DateCalculator       from "./pages/misc/DateCalculator";
+
+// Misc
+import CubicYards           from "./pages/misc/CubicYards";
 
 // Health
 import BmiBmr               from "./pages/health/BmiBmr";
@@ -84,10 +86,12 @@ export default function App() {
             <Route path="math/fraction-to-decimal-calculator" element={<FractionToDecimal />} />
             <Route path="math/numbers-to-words-converter"     element={<NumbersToWords />} />
 
+            {/* ── Time ── */}
+            <Route path="time/age-calculator"                element={<AgeCalculator />} />
+            <Route path="time/date-calculator"               element={<DateCalculator />} />
+
             {/* ── Misc ── */}
             <Route path="misc/cubic-yards-calculator"         element={<CubicYards />} />
-            <Route path="misc/age-calculator"                element={<AgeCalculator />} />
-            <Route path="misc/date-calculator"               element={<DateCalculator />} />
 
             {/* ── Cooking ── */}
             <Route path="cooking/cooking-converter"           element={<CookingConverter />} />

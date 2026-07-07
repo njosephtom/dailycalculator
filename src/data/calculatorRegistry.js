@@ -168,8 +168,8 @@ export const calculatorRegistry = [
   {
     id: "age-calculator",
     name: "Age Calculator",
-    path: "/misc/age-calculator",
-    category: "misc",
+    path: "/time/age-calculator",
+    category: "time",
     implemented: true,
     description: "Calculate your exact age in years, months, days, hours — plus zodiac sign, milestones, and birthday countdown.",
     tags: ["age", "birthday", "date of birth", "zodiac", "milestone", "days old", "countdown"],
@@ -177,8 +177,8 @@ export const calculatorRegistry = [
   {
     id: "date-calculator",
     name: "Date / Time Calculator",
-    path: "/misc/date-calculator",
-    category: "misc",
+    path: "/time/date-calculator",
+    category: "time",
     implemented: true,
     description: "Calculate days between two dates or add/subtract days, weeks, and months from any date. Includes business days count.",
     tags: ["date", "time", "days between", "deadline", "business days", "add days", "subtract", "calendar"],
@@ -331,6 +331,12 @@ export const categoryMeta = {
     description: "Core mathematical utilities including percentages, ratios, and number operations.",
     icon: "Calculator",
     color: "indigo",
+  },
+  time: {
+    label: "Time",
+    description: "Date and time calculators for age, dates, and time calculations.",
+    icon: "Clock",
+    color: "cyan",
   },
   cooking: {
     label: "Cooking",
