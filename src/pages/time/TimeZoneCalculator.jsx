@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { X, Plus, Clock } from "lucide-react";
+import { X, Plus, Clock, ChevronUp, ChevronDown } from "lucide-react";
 
 const COMMON_TIMEZONES = [
   { name: "London", timezone: "Europe/London", code: "GMT/BST" },
@@ -23,48 +23,33 @@ const COMMON_TIMEZONES = [
   { name: "Auckland", timezone: "Pacific/Auckland", code: "NZDT/NZST" },
 ];
 
-function TimelineHours({ currentHour }) {
-  const hours = Array.from({ length: 24 }, (_, i) => i);
-
-  return (
-    <div className="flex gap-1 px-2 overflow-x-auto pb-2 scrollbar-hide">
-      {hours.map((hour) => {
-        const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
-        const period = hour < 12 ? 'am' : 'pm';
-        const isNow = Math.floor(currentHour) === hour;
-
-        return (
-          <div
-            key={hour}
-            className={`flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center text-xs font-semibold transition-colors ${
-              isNow
-                ? 'bg-indigo-600 dark:bg-indigo-500 text-white'
-                : 'bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300'
-            }`}
-          >
-            <span className="text-center leading-tight">
-              <div>{displayHour}</div>
-              <div className="text-[9px]">{period}</div>
-            </span>
-          </div>
-        );
-      })}
-    </div>
-  );
+function getTimeInTimezone(baseDate, baseTimezone, targetTimezone) {
+  const baseTime = new Date(baseDate.toLocaleString('en-US', { timeZone: baseTimezone }));
+  const targetTime = new Date(baseTime.toLocaleString('en-US', { timeZone: targetTimezone }));
+  return targetTime;
 }
 
-function CityTimeline({ city, currentTime, onRemove }) {
-  const cityTime = new Date(currentTime.toLocaleString('en-US', { timeZone: city.timezone }));
-  const currentHour = cityTime.getHours() + cityTime.getMinutes() / 60;
+function CityTimeline({ city, selectedDate, selectedHour, onSelectHour, isHome, onMoveUp, onMoveDown, canMoveUp, canMoveDown, onRemove }) {
+  let displayTime;
+  let displayHour;
 
-  const timeString = cityTime.toLocaleTimeString('en-US', {
+  if (selectedDate) {
+    displayTime = new Date(selectedDate.toLocaleString('en-US', { timeZone: city.timezone }));
+    displayHour = displayTime.getHours() + displayTime.getMinutes() / 60;
+  } else {
+    const now = new Date();
+    displayTime = new Date(now.toLocaleString('en-US', { timeZone: city.timezone }));
+    displayHour = displayTime.getHours() + displayTime.getMinutes() / 60;
+  }
+
+  const timeString = displayTime.toLocaleTimeString('en-US', {
     timeZone: city.timezone,
     hour: '2-digit',
     minute: '2-digit',
     hour12: true,
   });
 
-  const dateString = cityTime.toLocaleDateString('en-US', {
+  const dateString = displayTime.toLocaleDateString('en-US', {
     timeZone: city.timezone,
     weekday: 'short',
     month: 'short',
@@ -74,51 +59,86 @@ function CityTimeline({ city, currentTime, onRemove }) {
   const hours = Array.from({ length: 24 }, (_, i) => i);
 
   return (
-    <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden">
+    <div className={`rounded-xl overflow-hidden border transition-all ${
+      isHome
+        ? 'bg-indigo-50 dark:bg-indigo-900/20 border-indigo-300 dark:border-indigo-600'
+        : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700'
+    }`}>
       <div className="flex">
         {/* Left info section */}
-        <div className="w-32 border-r border-slate-200 dark:border-slate-700 p-4 flex flex-col justify-center shrink-0">
-          <div className="flex items-baseline gap-1.5 mb-1">
-            <h3 className="font-semibold text-sm text-slate-800 dark:text-slate-100">{city.name}</h3>
-            <span className="text-[10px] uppercase tracking-wider font-medium text-slate-500 dark:text-slate-400">{city.code}</span>
+        <div className="w-32 border-r border-slate-200 dark:border-slate-700 p-4 flex flex-col justify-between shrink-0">
+          <div>
+            <div className="flex items-baseline gap-1.5 mb-1">
+              <h3 className="font-semibold text-sm text-slate-800 dark:text-slate-100">{city.name}</h3>
+              {isHome && (
+                <span className="text-[9px] uppercase tracking-wider font-bold bg-indigo-600 text-white px-1.5 py-0.5 rounded">
+                  Home
+                </span>
+              )}
+              <span className="text-[10px] uppercase tracking-wider font-medium text-slate-500 dark:text-slate-400">{city.code}</span>
+            </div>
+            <p className="text-xl font-bold text-indigo-600 dark:text-indigo-400 font-mono mb-0.5">
+              {timeString}
+            </p>
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 mb-2">
+              {dateString}
+            </p>
           </div>
-          <p className="text-xl font-bold text-indigo-600 dark:text-indigo-400 font-mono mb-0.5">
-            {timeString}
-          </p>
-          <p className="text-[11px] text-slate-500 dark:text-slate-400 mb-2">
-            {dateString}
-          </p>
-          <button
-            onClick={() => onRemove(city.timezone)}
-            className="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors w-fit"
-            aria-label="Remove city"
-          >
-            <X size={14} />
-          </button>
+
+          <div className="flex items-center gap-1">
+            <button
+              onClick={onMoveUp}
+              disabled={!canMoveUp}
+              className="p-1 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors"
+              title="Move up"
+            >
+              <ChevronUp size={14} />
+            </button>
+            <button
+              onClick={onMoveDown}
+              disabled={!canMoveDown}
+              className="p-1 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors"
+              title="Move down"
+            >
+              <ChevronDown size={14} />
+            </button>
+            <button
+              onClick={() => onRemove(city.timezone)}
+              className="p-1 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors ml-auto"
+              aria-label="Remove city"
+            >
+              <X size={14} />
+            </button>
+          </div>
         </div>
 
         {/* Timeline section */}
         <div className="flex-1 px-3 py-3 overflow-x-auto">
           <div className="flex gap-0.5">
             {hours.map((hour) => {
-              const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
+              const displayHourNum = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
               const period = hour < 12 ? 'am' : 'pm';
-              const isNow = Math.floor(currentHour) === hour;
+              const isCurrentHour = Math.floor(displayHour) === hour;
+              const isSelected = selectedHour === hour;
 
               return (
-                <div
+                <button
                   key={hour}
-                  className={`flex-shrink-0 w-8 h-12 rounded-md flex items-center justify-center text-[9px] font-bold transition-colors ${
-                    isNow
-                      ? 'bg-indigo-600 dark:bg-indigo-500 text-white'
-                      : 'bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300'
+                  onClick={() => onSelectHour(hour)}
+                  className={`flex-shrink-0 w-8 h-12 rounded-md flex items-center justify-center text-[9px] font-bold transition-all cursor-pointer ${
+                    isSelected
+                      ? 'bg-indigo-600 dark:bg-indigo-500 text-white ring-2 ring-indigo-400'
+                      : isCurrentHour
+                      ? 'bg-indigo-500 dark:bg-indigo-600 text-white'
+                      : 'bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-200 dark:hover:bg-indigo-900/60'
                   }`}
+                  title={`${displayHourNum}:00 ${period}`}
                 >
                   <span className="text-center leading-tight">
-                    <div className="text-[10px]">{displayHour}</div>
+                    <div className="text-[10px]">{displayHourNum}</div>
                     <div className="text-[7px]">{period}</div>
                   </span>
-                </div>
+                </button>
               );
             })}
           </div>
@@ -192,7 +212,9 @@ function CitySelector({ onAdd, addedCities }) {
 }
 
 export default function TimeZoneCalculator() {
-  const [currentTime, setCurrentTime] = useState(new Date());
+  const [currentTime] = useState(new Date());
+  const [selectedHour, setSelectedHour] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(null);
   const [cities, setCities] = useState([
     { name: "London", timezone: "Europe/London", code: "GMT/BST" },
     { name: "Cairo", timezone: "Africa/Cairo", code: "EET/EEST" },
@@ -200,9 +222,31 @@ export default function TimeZoneCalculator() {
   ]);
 
   useEffect(() => {
-    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    const timer = setInterval(() => {
+      if (!selectedDate) {
+        setCurrentTime(new Date());
+      }
+    }, 1000);
     return () => clearInterval(timer);
-  }, []);
+  }, [selectedDate]);
+
+  const handleSelectHour = (hour) => {
+    if (selectedHour === hour) {
+      setSelectedHour(null);
+      setSelectedDate(null);
+    } else {
+      const homeTimezone = cities[0].timezone;
+      const now = new Date();
+      const homeTime = new Date(now.toLocaleString('en-US', { timeZone: homeTimezone }));
+      homeTime.setHours(hour, 0, 0, 0);
+
+      const offset = homeTime.getTime() - new Date(homeTime.toLocaleString('en-US', { timeZone: homeTimezone })).getTime();
+      const selectedDateTime = new Date(now.getTime() + offset);
+
+      setSelectedDate(selectedDateTime);
+      setSelectedHour(hour);
+    }
+  };
 
   const handleAddCity = (city) => {
     setCities([...cities, city]);
@@ -212,13 +256,29 @@ export default function TimeZoneCalculator() {
     setCities(cities.filter(c => c.timezone !== timezone));
   };
 
+  const handleMoveUp = (index) => {
+    if (index > 0) {
+      const newCities = [...cities];
+      [newCities[index], newCities[index - 1]] = [newCities[index - 1], newCities[index]];
+      setCities(newCities);
+    }
+  };
+
+  const handleMoveDown = (index) => {
+    if (index < cities.length - 1) {
+      const newCities = [...cities];
+      [newCities[index], newCities[index + 1]] = [newCities[index + 1], newCities[index]];
+      setCities(newCities);
+    }
+  };
+
   return (
     <div className="space-y-4">
       {/* Title card */}
       <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5">
         <h1 className="text-xl font-bold text-slate-800 dark:text-white">Time Zone Calculator</h1>
         <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-          Compare current times across different cities and time zones worldwide.
+          Click on any hour to see what time it will be in other cities. Reorder cities using up/down arrows.
         </p>
       </div>
 
@@ -228,11 +288,18 @@ export default function TimeZoneCalculator() {
       {/* Cities timelines */}
       <div className="space-y-3">
         {cities.length > 0 ? (
-          cities.map((city) => (
+          cities.map((city, index) => (
             <CityTimeline
               key={city.timezone}
               city={city}
-              currentTime={currentTime}
+              selectedDate={selectedDate}
+              selectedHour={selectedHour}
+              onSelectHour={handleSelectHour}
+              isHome={index === 0}
+              onMoveUp={() => handleMoveUp(index)}
+              onMoveDown={() => handleMoveDown(index)}
+              canMoveUp={index > 0}
+              canMoveDown={index < cities.length - 1}
               onRemove={handleRemoveCity}
             />
           ))
@@ -248,24 +315,24 @@ export default function TimeZoneCalculator() {
       <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5">
         <h2 className="text-sm font-bold text-slate-700 dark:text-slate-200 mb-3 flex items-center gap-2">
           <Clock size={16} className="text-indigo-600 dark:text-indigo-400" />
-          About Time Zones
+          How to Use
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-slate-600 dark:text-slate-400">
           <div>
-            <p className="font-medium text-slate-700 dark:text-slate-300 mb-1">UTC (Coordinated Universal Time)</p>
-            <p>The primary time standard by which the world regulates clocks and time.</p>
+            <p className="font-medium text-slate-700 dark:text-slate-300 mb-1">Select a Time</p>
+            <p>Click any hour on a timeline to see what time it will be in all other cities at that moment.</p>
           </div>
           <div>
-            <p className="font-medium text-slate-700 dark:text-slate-300 mb-1">Daylight Saving Time</p>
-            <p>Many regions shift their time forward by one hour during summer months. Automatically accounted for here.</p>
+            <p className="font-medium text-slate-700 dark:text-slate-300 mb-1">Home Timezone</p>
+            <p>The top city is your home timezone. Move cities up/down to reorganize them. Your home timezone's hour determines all other times.</p>
           </div>
           <div>
-            <p className="font-medium text-slate-700 dark:text-slate-300 mb-1">Time Zone Offset</p>
-            <p>Expressed as UTC±HH:MM. For example, UTC+5:30 is India Standard Time, UTC-8 is Pacific Standard Time.</p>
+            <p className="font-medium text-slate-700 dark:text-slate-300 mb-1">Add Cities</p>
+            <p>Use the search field to add more cities. Select from 19 major world cities or search by timezone.</p>
           </div>
           <div>
-            <p className="font-medium text-slate-700 dark:text-slate-300 mb-1">IANA Time Zone Database</p>
-            <p>The standard reference for all time zones worldwide, accounting for historical and regional changes.</p>
+            <p className="font-medium text-slate-700 dark:text-slate-300 mb-1">Reorder</p>
+            <p>Use the up/down arrows to move cities in the list. The first city becomes your home timezone.</p>
           </div>
         </div>
       </div>
