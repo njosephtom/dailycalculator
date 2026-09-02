@@ -11,13 +11,20 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-// Fallback config for converthub-e659b (update .env.local with your keys)
-if (!firebaseConfig.apiKey) {
-  throw new Error("Firebase config missing. Add to .env.local: VITE_FIREBASE_* keys from Firebase Console");
+let app, auth, db, googleProvider;
+export const firebaseConfigMissing = !firebaseConfig.apiKey;
+
+if (!firebaseConfigMissing) {
+  app = initializeApp(firebaseConfig);
+  auth = getAuth(app);
+  db = getFirestore(app);
+  googleProvider = new GoogleAuthProvider();
+} else {
+  // ponytail: mock objects for missing config - prevents crash, shows setup screen
+  auth = { currentUser: null };
+  db = null;
+  googleProvider = null;
 }
 
-const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
-export const db = getFirestore(app);
-export const googleProvider = new GoogleAuthProvider();
+export { auth, db, googleProvider };
 export default app;

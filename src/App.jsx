@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import { Analytics } from "@vercel/analytics/react";
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { auth } from "./utils/firebase";
+import { auth, firebaseConfigMissing } from "./utils/firebase";
 import { ThemeProvider } from "./context/ThemeContext";
 import { CalculatorRegistryProvider } from "./context/CalculatorRegistryContext";
 import Layout from "./components/layout/Layout";
@@ -77,6 +77,25 @@ export default function App() {
     await signOut(auth);
     setUser(null);
   };
+
+  if (firebaseConfigMissing) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-red-50 to-orange-100">
+        <div className="bg-white rounded-lg shadow-lg p-8 max-w-md text-center">
+          <h2 className="text-2xl font-bold text-red-600 mb-4">⚠️ Setup Required</h2>
+          <p className="text-gray-700 mb-4">Firebase configuration is missing.</p>
+          <ol className="text-left text-sm text-gray-600 mb-6 space-y-2">
+            <li>1. Go to <a href="https://console.firebase.google.com/u/0/project/converthub-e659b/settings/general" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">Firebase Console</a></li>
+            <li>2. Copy the Web App config</li>
+            <li>3. Create <code className="bg-gray-100 px-2 py-1 rounded">.env.local</code> file</li>
+            <li>4. Add: <code className="bg-gray-100 px-2 py-1 rounded">VITE_FIREBASE_API_KEY=...</code> etc</li>
+            <li>5. Restart dev server</li>
+          </ol>
+          <p className="text-xs text-gray-500">See <code className="bg-gray-100 px-2">.env.example</code> for template</p>
+        </div>
+      </div>
+    );
+  }
 
   if (loading) return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
   if (!user) return <SignInPage onSignIn={setUser} />;
