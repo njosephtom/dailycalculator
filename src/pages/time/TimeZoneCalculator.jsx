@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { X, Plus, Clock, ChevronUp, ChevronDown } from "lucide-react";
+import { CITIES_DATA } from "../../data/citiesData";
 
-const GEONAMES_USERNAME = "demo"; // Using demo account - replace with your own for production
+// Add your own GeoNames username here for better results
+// Sign up at https://www.geonames.org/login for a free account
+const GEONAMES_USERNAME = "demo";
 
 const fetchCitiesFromGeoNames = async (searchTerm) => {
   if (!searchTerm || searchTerm.length < 1) return [];
 
   try {
     const response = await fetch(
-      `http://api.geonames.org/searchJSON?name_startsWith=${encodeURIComponent(searchTerm)}&featureClass=P&maxRows=10&username=${GEONAMES_USERNAME}`
+      `https://api.geonames.org/searchJSON?name_startsWith=${encodeURIComponent(searchTerm)}&featureClass=P&maxRows=10&username=${GEONAMES_USERNAME}`
     );
     const data = await response.json();
 
@@ -26,11 +29,7 @@ const fetchCitiesFromGeoNames = async (searchTerm) => {
   }
 };
 
-const DEFAULT_CITIES = [
-  { name: "London", timezone: "Europe/London", code: "GB", country: "United Kingdom" },
-  { name: "Cairo", timezone: "Africa/Cairo", code: "EG", country: "Egypt" },
-  { name: "Moscow", timezone: "Europe/Moscow", code: "RU", country: "Russia" },
-];
+const DEFAULT_CITIES = CITIES_DATA.slice(0, 3);
 
 function getTimeInTimezone(baseDate, baseTimezone, targetTimezone) {
   const baseTime = new Date(baseDate.toLocaleString('en-US', { timeZone: baseTimezone }));
@@ -173,10 +172,16 @@ function CitySelector({ onAdd, addedCities }) {
     }
 
     setIsLoading(true);
-    const cities = await fetchCitiesFromGeoNames(value);
+
+    // First, search local cities data
+    const localMatches = CITIES_DATA.filter(city =>
+      city.name.toLowerCase().includes(value.toLowerCase()) ||
+      city.country.toLowerCase().includes(value.toLowerCase()) ||
+      city.timezone.toLowerCase().includes(value.toLowerCase())
+    );
 
     // Filter out already added cities
-    const filtered = cities.filter(
+    const filtered = localMatches.filter(
       city => !addedCities.some(c => c.timezone === city.timezone)
     );
 
@@ -208,7 +213,7 @@ function CitySelector({ onAdd, addedCities }) {
       <div className="relative">
         <input
           type="text"
-          placeholder="Place or timezone"
+          placeholder="Search city or timezone..."
           value={search}
           onChange={(e) => {
             handleSearch(e.target.value);
@@ -257,11 +262,11 @@ function CitySelector({ onAdd, addedCities }) {
             ))
           ) : search.length > 0 ? (
             <div className="px-4 py-3 text-center text-sm text-slate-500 dark:text-slate-400">
-              No cities found
+              No matching cities found
             </div>
           ) : (
             <div className="px-4 py-3 text-center text-sm text-slate-500 dark:text-slate-400">
-              Start typing to search for cities...
+              Type a city name or timezone to search...
             </div>
           )}
         </div>
@@ -271,7 +276,7 @@ function CitySelector({ onAdd, addedCities }) {
 }
 
 export default function TimeZoneCalculator() {
-  const [currentTime] = useState(new Date());
+  const [currentTime, setCurrentTime] = useState(new Date());
   const [selectedHour, setSelectedHour] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
   const [cities, setCities] = useState(DEFAULT_CITIES);
@@ -383,7 +388,7 @@ export default function TimeZoneCalculator() {
           </div>
           <div>
             <p className="font-medium text-slate-700 dark:text-slate-300 mb-1">Add Cities</p>
-            <p>Use the search field to add more cities. Select from 19 major world cities or search by timezone.</p>
+            <p>Use the search field to add cities. Search from 100+ major world cities by name, country, or timezone.</p>
           </div>
           <div>
             <p className="font-medium text-slate-700 dark:text-slate-300 mb-1">Reorder</p>
