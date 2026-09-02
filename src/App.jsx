@@ -1,12 +1,16 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import { Analytics } from "@vercel/analytics/react";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { auth } from "./utils/firebase";
 import { ThemeProvider } from "./context/ThemeContext";
 import { CalculatorRegistryProvider } from "./context/CalculatorRegistryContext";
 import Layout from "./components/layout/Layout";
 import Home from "./pages/Home";
+import Dashboard from "./pages/Dashboard";
 import CategoryHub from "./pages/CategoryHub";
 import ComingSoon from "./pages/ComingSoon";
+import SignInPage from "./components/auth/SignInPage";
 
 // Finance
 import CompoundInterest     from "./pages/finance/CompoundInterest";
@@ -58,12 +62,31 @@ import WeightConverter      from "./pages/convert/WeightConverter";
 import LengthConverter      from "./pages/convert/LengthConverter";
 
 export default function App() {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (firebaseUser) => {
+      setUser(firebaseUser);
+      setLoading(false);
+    });
+    return unsub;
+  }, []);
+
+  const handleSignOut = async () => {
+    await signOut(auth);
+    setUser(null);
+  };
+
+  if (loading) return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
+  if (!user) return <SignInPage onSignIn={setUser} />;
+
   return (
     <ThemeProvider>
       <CalculatorRegistryProvider>
         <Routes>
           <Route path="/" element={<Layout />}>
-            <Route index element={<Home />} />
+            <Route index element={user ? <Dashboard user={user} onSignOut={handleSignOut} /> : <Home />} />
 
             {/* Category hub pages */}
             <Route path=":category" element={<CategoryHub />} />
