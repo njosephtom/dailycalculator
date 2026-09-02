@@ -108,7 +108,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Layout user={user} onSignIn={() => setShowSignIn(true)} onSignOut={handleSignOut} />}>
             <Route index element={<Home />} />
-            {user && <Route path="dashboard" element={<Dashboard user={user} onSignOut={handleSignOut} />} />
+            <Route path="dashboard" element={user ? <Dashboard user={user} onSignOut={handleSignOut} /> : <Home />} />
 
             {/* Category hub pages */}
             <Route path=":category" element={<CategoryHub />} />
