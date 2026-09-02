@@ -90,28 +90,25 @@ export default function App() {
         <div className="bg-white rounded-lg shadow-lg p-8 max-w-md text-center">
           <h2 className="text-2xl font-bold text-red-600 mb-4">⚠️ Setup Required</h2>
           <p className="text-gray-700 mb-4">Firebase configuration is missing.</p>
-          <ol className="text-left text-sm text-gray-600 mb-6 space-y-2">
-            <li>1. Go to <a href="https://console.firebase.google.com/u/0/project/converthub-e659b/settings/general" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">Firebase Console</a></li>
-            <li>2. Copy the Web App config</li>
-            <li>3. Create <code className="bg-gray-100 px-2 py-1 rounded">.env.local</code> file</li>
-            <li>4. Add: <code className="bg-gray-100 px-2 py-1 rounded">VITE_FIREBASE_API_KEY=...</code> etc</li>
-            <li>5. Restart dev server</li>
-          </ol>
-          <p className="text-xs text-gray-500">See <code className="bg-gray-100 px-2">.env.example</code> for template</p>
+          <p className="text-xs text-gray-500">App will run without login features</p>
         </div>
       </div>
     );
   }
 
+  const [showSignIn, setShowSignIn] = useState(false);
+
+  // Allow access without login - optional auth for saving favorites
   if (loading) return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
-  if (!user) return <SignInPage onSignIn={setUser} />;
 
   return (
     <ThemeProvider>
       <CalculatorRegistryProvider>
+        {showSignIn && <SignInPage onSignIn={(u) => { setUser(u); setShowSignIn(false); }} onClose={() => setShowSignIn(false)} />}
         <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={user ? <Dashboard user={user} onSignOut={handleSignOut} /> : <Home />} />
+          <Route path="/" element={<Layout user={user} onSignIn={() => setShowSignIn(true)} onSignOut={handleSignOut} />}>
+            <Route index element={<Home />} />
+            {user && <Route path="dashboard" element={<Dashboard user={user} onSignOut={handleSignOut} />} />
 
             {/* Category hub pages */}
             <Route path=":category" element={<CategoryHub />} />

@@ -12,7 +12,7 @@ export default function Footer() {
           <div className="col-span-2 md:col-span-2">
             <div className="flex items-center gap-2 mb-2">
               <Calculator size={18} className="text-indigo-600" />
-              <span className="font-bold text-slate-800 dark:text-white">CalcVault</span>
+              <span className="font-bold text-slate-800 dark:text-white">ConvertHub</span>
             </div>
             <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xs leading-relaxed">
               Free online calculators for finance, health, cooking, math, and unit conversions. Fast, accurate, and privacy-friendly.
@@ -46,7 +46,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-8 pt-4 border-t border-slate-100 dark:border-slate-700 text-center text-xs text-slate-400">
-          © {new Date().getFullYear()} CalcVault. All rights reserved. Results are for informational purposes only.
+          © {new Date().getFullYear()} ConvertHub. All rights reserved. Results are for informational purposes only.
         </div>
       </div>
     </footer>

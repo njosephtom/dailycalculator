@@ -24,14 +24,14 @@ function usePageSEO() {
   return { title: "Calculator", description: null, path: pathname };
 }
 
-export default function Layout() {
+export default function Layout({ user, onSignIn, onSignOut }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const seo = usePageSEO();
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 transition-colors duration-200 flex flex-col">
       <PageSEO title={seo.title} description={seo.description} path={seo.path} />
-      <Header />
+      <Header user={user} onSignIn={onSignIn} onSignOut={onSignOut} />
 
       <div className="flex flex-1 w-full max-w-7xl mx-auto">
 

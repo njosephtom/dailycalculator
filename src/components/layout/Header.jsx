@@ -4,7 +4,7 @@ import { Calculator, Moon, Sun, Search, X } from "lucide-react";
 import { useTheme } from "../../context/ThemeContext";
 import { useCalculatorRegistry } from "../../context/CalculatorRegistryContext";
 
-export default function Header() {
+export default function Header({ user, onSignIn, onSignOut }) {
   const { dark, toggle } = useTheme();
   const { searchQuery, setSearchQuery, filteredResults } = useCalculatorRegistry();
   const [focused, setFocused] = useState(false);
@@ -79,10 +79,10 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center gap-4">
-        <Link to="/" className="flex items-center gap-2 shrink-0" aria-label="CalcVault Home">
+        <Link to="/" className="flex items-center gap-2 shrink-0" aria-label="ConvertHub Home">
           <Calculator className="text-indigo-600 dark:text-indigo-400" size={22} />
           <span className="font-bold text-lg text-slate-900 dark:text-white tracking-tight">
-            CalcVault
+            ConvertHub
           </span>
         </Link>
 
@@ -145,7 +145,7 @@ export default function Header() {
         {/* Theme toggle */}
         <button
           onClick={toggle}
-          className="ml-auto p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+          className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
           aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
         >
           {dark
@@ -153,6 +153,33 @@ export default function Header() {
             : <Moon size={18} className="text-slate-500" />
           }
         </button>
+
+        {/* User auth buttons */}
+        <div className="ml-4 flex items-center gap-2">
+          {user ? (
+            <>
+              <button
+                onClick={() => navigate("/dashboard")}
+                className="text-sm px-3 py-1.5 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-lg transition"
+              >
+                {user.displayName || "Dashboard"}
+              </button>
+              <button
+                onClick={onSignOut}
+                className="text-sm px-3 py-1.5 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition"
+              >
+                Sign Out
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={onSignIn}
+              className="text-sm px-3 py-1.5 bg-indigo-600 text-white hover:bg-indigo-700 rounded-lg transition"
+            >
+              Sign In
+            </button>
+          )}
+        </div>
       </div>
     </header>
   );
