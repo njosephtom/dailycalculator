@@ -3,13 +3,18 @@ import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBY5UFE3wf-SBp7kK7xPdPa2s6ULgG41ak",
-  authDomain: "resumebuddy-3d3ae.firebaseapp.com",
-  projectId: "resumebuddy-3d3ae",
-  storageBucket: "resumebuddy-3d3ae.firebasestorage.app",
-  messagingSenderId: "396903959586",
-  appId: "1:396903959586:web:d53ada6516712feea60e7b",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
+
+// Fallback config for converthub-e659b (update .env.local with your keys)
+if (!firebaseConfig.apiKey) {
+  throw new Error("Firebase config missing. Add to .env.local: VITE_FIREBASE_* keys from Firebase Console");
+}
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
