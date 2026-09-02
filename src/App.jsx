@@ -66,6 +66,12 @@ export default function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // ponytail: if Firebase config missing, skip auth init and show setup screen immediately
+    if (firebaseConfigMissing) {
+      setLoading(false);
+      return;
+    }
+
     const unsub = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser);
       setLoading(false);
