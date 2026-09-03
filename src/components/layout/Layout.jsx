@@ -45,6 +45,7 @@ const COLOR = {
 export default function Layout({ user, onSignIn, onSignOut }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [mobileExpanded, setMobileExpanded] = useState(true);
+  const [desktopCollapsed, setDesktopCollapsed] = useState(false);
   const seo = usePageSEO();
   const { pathname } = useLocation();
   const activeCategory = pathname.split("/")[1] || "";
@@ -94,8 +95,20 @@ export default function Layout({ user, onSignIn, onSignOut }) {
         </aside>
 
         {/* ── Desktop sidebar (left, sticky) ── */}
-        <aside className="hidden lg:flex lg:flex-col w-56 xl:w-64 shrink-0 sticky top-16 self-start h-[calc(100vh-4rem)]">
-          <Sidebar />
+        <aside className={`hidden lg:flex lg:flex-col shrink-0 sticky top-16 self-start h-[calc(100vh-4rem)] bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 transition-all ${
+          desktopCollapsed ? "w-16" : "w-56 xl:w-64"
+        }`}>
+          <div className="flex items-center justify-between px-2 py-3 border-b border-slate-200 dark:border-slate-700">
+            {!desktopCollapsed && <span className="text-xs font-bold text-slate-700 dark:text-slate-300">Categories</span>}
+            <button
+              onClick={() => setDesktopCollapsed(!desktopCollapsed)}
+              className="p-1.5 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors shrink-0"
+              aria-label={desktopCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            >
+              {desktopCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+            </button>
+          </div>
+          <Sidebar collapsed={desktopCollapsed} />
         </aside>
 
         {/* ── Mobile: backdrop ── */}

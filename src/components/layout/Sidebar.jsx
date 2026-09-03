@@ -26,13 +26,13 @@ const grouped = CATEGORY_ORDER.reduce((acc, cat) => {
   return acc;
 }, {});
 
-export default function Sidebar({ onClose }) {
+export default function Sidebar({ onClose, collapsed = false }) {
   const location = useLocation();
   const activeCategory = location.pathname.split("/")[1] || "";
 
   const [open, setOpen] = useState(() =>
     CATEGORY_ORDER.reduce((acc, cat) => {
-      acc[cat] = cat === activeCategory;
+      acc[cat] = !collapsed && cat === activeCategory;
       return acc;
     }, {})
   );
@@ -40,9 +40,9 @@ export default function Sidebar({ onClose }) {
   useEffect(() => {
     const cat = location.pathname.split("/")[1] || "";
     if (cat && CATEGORY_ORDER.includes(cat)) {
-      setOpen((prev) => ({ ...prev, [cat]: true }));
+      setOpen((prev) => ({ ...prev, [cat]: !collapsed && true }));
     }
-  }, [location.pathname]);
+  }, [location.pathname, collapsed]);
 
   return (
     <div className="h-full flex flex-col bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700">
@@ -85,21 +85,26 @@ export default function Sidebar({ onClose }) {
                   isCatActive
                     ? `${c.bg} ${c.active} font-semibold`
                     : "hover:bg-slate-100 dark:hover:bg-slate-700/60 text-slate-700 dark:text-slate-200"
-                }`}
+                } ${collapsed ? "justify-center" : ""}`}
+                title={collapsed ? meta.label : undefined}
               >
                 {Icon && <Icon size={15} className={c.icon} />}
-                <span className="flex-1 text-sm font-semibold tracking-tight">{meta.label}</span>
-                <span className="text-[10px] font-medium text-slate-400 dark:text-slate-500 tabular-nums">
-                  {items.length}
-                </span>
-                {isOpen
-                  ? <ChevronDown size={13} className="text-slate-400 shrink-0" />
-                  : <ChevronRight size={13} className="text-slate-400 shrink-0" />
-                }
+                {!collapsed && (
+                  <>
+                    <span className="flex-1 text-sm font-semibold tracking-tight">{meta.label}</span>
+                    <span className="text-[10px] font-medium text-slate-400 dark:text-slate-500 tabular-nums">
+                      {items.length}
+                    </span>
+                    {isOpen
+                      ? <ChevronDown size={13} className="text-slate-400 shrink-0" />
+                      : <ChevronRight size={13} className="text-slate-400 shrink-0" />
+                    }
+                  </>
+                )}
               </Link>
 
               {/* Calculator links */}
-              {isOpen && (
+              {!collapsed && isOpen && (
                 <div className="ml-4 pl-3 border-l-2 border-slate-200 dark:border-slate-700 mt-0.5 mb-1 space-y-0.5">
                   {items.map((calc) => {
                     const isActive = location.pathname === calc.path;
