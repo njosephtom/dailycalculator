@@ -11,7 +11,7 @@ export default function Home() {
       {/* Hero */}
       <div className="bg-gradient-to-br from-indigo-600 to-indigo-700 rounded-2xl p-8 text-white">
         <h1 className="text-2xl md:text-3xl font-bold mb-2">Universal Calculator Suite</h1>
-        <p className="text-indigo-200 text-sm leading-relaxed max-w-lg">
+        <p className="hidden sm:block text-indigo-200 text-sm leading-relaxed max-w-lg">
           Free, fast, and accurate calculators for finance, health, cooking, math, and unit
           conversions — all in one place.
         </p>
@@ -38,7 +38,7 @@ export default function Home() {
                   >
                     {meta.label}
                   </Link>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{meta.description}</p>
+                  <p className="hidden sm:block text-xs text-slate-500 dark:text-slate-400 mt-0.5">{meta.description}</p>
                 </div>
               </div>
               <ul className="flex flex-wrap gap-2 pl-11">
