@@ -47,10 +47,9 @@ export default function Sidebar({ onClose, collapsed = false, user, onSignIn, on
 
   return (
     <div className="h-full flex flex-col bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700">
-      {/* Mobile header */}
+      {/* Mobile header - close button */}
       {onClose && (
-        <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200 dark:border-slate-700 lg:hidden shrink-0">
-          <span className="text-sm font-bold text-slate-700 dark:text-slate-100">Calculators</span>
+        <div className="flex items-center justify-end px-4 py-3 border-b border-slate-200 dark:border-slate-700 lg:hidden shrink-0">
           <button
             onClick={onClose}
             className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-500"
@@ -61,8 +60,8 @@ export default function Sidebar({ onClose, collapsed = false, user, onSignIn, on
         </div>
       )}
 
-      {/* Auth section - always show text in drawer (onClose = mobile drawer) */}
-      <div className="px-2 py-3 border-b border-slate-200 dark:border-slate-700 shrink-0">
+      {/* Auth section - account options */}
+      <div className="px-3 py-2 space-y-2 border-b border-slate-200 dark:border-slate-700 shrink-0">
         {user ? (
           <div className="space-y-1">
             <button
@@ -98,6 +97,11 @@ export default function Sidebar({ onClose, collapsed = false, user, onSignIn, on
             <span className="flex-1 text-left">Sign In</span>
           </button>
         )}
+      </div>
+
+      {/* Categories header */}
+      <div className="px-3 py-2 border-b border-slate-200 dark:border-slate-700 shrink-0">
+        <span className="text-xs font-bold uppercase text-slate-600 dark:text-slate-400 tracking-wide">Categories</span>
       </div>
 
       {/* Tree nav */}
