@@ -86,15 +86,15 @@ export default function Header({ user, onSignIn, onSignOut }) {
           </span>
         </Link>
 
-        {/* Auth buttons (mobile left) */}
+        {/* Auth buttons (mobile left, icon only) */}
         <div className="lg:hidden flex items-center gap-2">
           {!user && (
             <button
               onClick={onSignIn}
-              className="flex items-center gap-2 text-xs px-2 py-1.5 bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-100 border border-slate-200 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors"
+              className="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
+              aria-label="Sign In"
             >
-              <User size={14} />
-              <span>Sign In</span>
+              <User size={16} />
             </button>
           )}
         </div>
@@ -167,8 +167,8 @@ export default function Header({ user, onSignIn, onSignOut }) {
           }
         </button>
 
-        {/* User auth buttons */}
-        <div className="ml-4 flex items-center gap-2">
+        {/* User auth buttons (desktop only) */}
+        <div className="hidden lg:flex ml-4 items-center gap-2">
           {user ? (
             <>
               <button
