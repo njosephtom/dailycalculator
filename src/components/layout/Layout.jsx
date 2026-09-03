@@ -108,7 +108,7 @@ export default function Layout({ user, onSignIn, onSignOut }) {
               {desktopCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
             </button>
           </div>
-          <Sidebar collapsed={desktopCollapsed} />
+          <Sidebar collapsed={desktopCollapsed} user={user} onSignIn={onSignIn} onSignOut={onSignOut} />
         </aside>
 
         {/* ── Mobile: backdrop ── */}
@@ -125,7 +125,7 @@ export default function Layout({ user, onSignIn, onSignOut }) {
             sidebarOpen ? "translate-x-0" : "-translate-x-full"
           }`}
         >
-          <Sidebar onClose={() => setSidebarOpen(false)} />
+          <Sidebar onClose={() => setSidebarOpen(false)} user={user} onSignIn={onSignIn} onSignOut={onSignOut} />
         </aside>
 
         {/* ── Main content ── */}

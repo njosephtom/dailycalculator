@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   DollarSign, Calculator, ChefHat, Heart, Clock,
-  ArrowLeftRight, Wrench, Monitor, ChevronDown, ChevronRight, X,
+  ArrowLeftRight, Wrench, Monitor, ChevronDown, ChevronRight, X, User, LogOut,
 } from "lucide-react";
 import { calculatorRegistry, categoryMeta } from "../../data/calculatorRegistry";
 
@@ -26,8 +26,9 @@ const grouped = CATEGORY_ORDER.reduce((acc, cat) => {
   return acc;
 }, {});
 
-export default function Sidebar({ onClose, collapsed = false }) {
+export default function Sidebar({ onClose, collapsed = false, user, onSignIn, onSignOut }) {
   const location = useLocation();
+  const navigate = useNavigate();
   const activeCategory = location.pathname.split("/")[1] || "";
 
   const [open, setOpen] = useState(() =>
@@ -59,6 +60,45 @@ export default function Sidebar({ onClose, collapsed = false }) {
           </button>
         </div>
       )}
+
+      {/* Auth section */}
+      <div className="px-2 py-3 border-b border-slate-200 dark:border-slate-700 shrink-0">
+        {user ? (
+          <div className="space-y-1">
+            <button
+              onClick={() => {
+                navigate("/dashboard");
+                onClose?.();
+              }}
+              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors"
+            >
+              <User size={14} />
+              {!collapsed && <span className="flex-1 text-left">{user.displayName || "Dashboard"}</span>}
+            </button>
+            <button
+              onClick={() => {
+                onSignOut?.();
+                onClose?.();
+              }}
+              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+            >
+              <LogOut size={14} />
+              {!collapsed && <span className="flex-1 text-left">Sign Out</span>}
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => {
+              onSignIn?.();
+              onClose?.();
+            }}
+            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors border border-slate-200 dark:border-slate-600"
+          >
+            <User size={14} />
+            {!collapsed && <span className="flex-1 text-left">Sign In</span>}
+          </button>
+        )}
+      </div>
 
       {/* Tree nav */}
       <nav className="flex-1 overflow-y-auto px-2 py-3 space-y-0.5">

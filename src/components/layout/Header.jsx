@@ -86,19 +86,6 @@ export default function Header({ user, onSignIn, onSignOut }) {
           </span>
         </Link>
 
-        {/* Auth buttons (mobile left, icon only) */}
-        <div className="lg:hidden flex items-center gap-2">
-          {!user && (
-            <button
-              onClick={onSignIn}
-              className="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
-              aria-label="Sign In"
-            >
-              <User size={16} />
-            </button>
-          )}
-        </div>
-
         {/* Search */}
         <div className="relative flex-1 max-w-md">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={15} />
