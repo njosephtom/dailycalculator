@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Calculator, Moon, Sun, Search, X, User } from "lucide-react";
+import { Calculator, Moon, Sun, Search, X } from "lucide-react";
 import { useTheme } from "../../context/ThemeContext";
 import { useCalculatorRegistry } from "../../context/CalculatorRegistryContext";
 
@@ -154,33 +154,6 @@ export default function Header({ user, onSignIn, onSignOut }) {
           }
         </button>
 
-        {/* User auth buttons (desktop only) */}
-        <div className="hidden lg:flex ml-4 items-center gap-2">
-          {user ? (
-            <>
-              <button
-                onClick={() => navigate("/dashboard")}
-                className="text-sm px-3 py-1.5 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-lg transition"
-              >
-                {user.displayName || "Dashboard"}
-              </button>
-              <button
-                onClick={onSignOut}
-                className="text-sm px-3 py-1.5 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition"
-              >
-                Sign Out
-              </button>
-            </>
-          ) : (
-            <button
-              onClick={onSignIn}
-              className="flex items-center gap-2 text-sm px-4 py-2 bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-100 border border-slate-200 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors"
-            >
-              <User size={16} />
-              <span>Sign In / Create account</span>
-            </button>
-          )}
-        </div>
       </div>
     </header>
   );
