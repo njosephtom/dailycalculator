@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Outlet, useLocation, Link } from "react-router-dom";
 import {
   DollarSign, Calculator, ChefHat, Heart, Clock,
-  ArrowLeftRight, Wrench, Monitor, ChevronLeft, ChevronRight,
+  ArrowLeftRight, Wrench, Monitor, ChevronLeft, ChevronRight, Menu,
 } from "lucide-react";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
@@ -44,7 +44,6 @@ const COLOR = {
 
 export default function Layout({ user, onSignIn, onSignOut }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [mobileExpanded, setMobileExpanded] = useState(true);
   const [desktopCollapsed, setDesktopCollapsed] = useState(false);
   const seo = usePageSEO();
   const { pathname } = useLocation();
@@ -59,15 +58,13 @@ export default function Layout({ user, onSignIn, onSignOut }) {
       <div className="flex flex-1 w-full">
 
         {/* ── Mobile: persistent icon sidebar ── */}
-        <aside className={`lg:hidden flex flex-col items-center bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 py-3 gap-1.5 transition-all ${
-          mobileExpanded ? "w-16" : "w-12"
-        }`}>
+        <aside className="lg:hidden flex flex-col items-center w-16 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 py-3 gap-1.5">
           <button
-            onClick={() => setMobileExpanded(!mobileExpanded)}
+            onClick={() => setSidebarOpen(true)}
             className="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
-            aria-label={mobileExpanded ? "Collapse sidebar" : "Expand sidebar"}
+            aria-label="Open menu"
           >
-            {mobileExpanded ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
+            <Menu size={18} />
           </button>
 
           {CATEGORY_ORDER.map((cat) => {
