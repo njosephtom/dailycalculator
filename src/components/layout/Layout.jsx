@@ -34,6 +34,8 @@ function usePageSEO() {
 export default function Layout({ user, onSignIn, onSignOut }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const seo = usePageSEO();
+  const { pathname } = useLocation();
+  const activeCategory = pathname.split("/")[1] || "";
   useTrackUsage(user);
 
   return (
@@ -41,7 +43,32 @@ export default function Layout({ user, onSignIn, onSignOut }) {
       <PageSEO title={seo.title} description={seo.description} path={seo.path} />
       <Header user={user} onSignIn={onSignIn} onSignOut={onSignOut} />
 
-      <div className="flex flex-1 w-full max-w-7xl mx-auto">
+      <div className="flex flex-1 w-full">
+
+        {/* ── Mobile: persistent icon sidebar ── */}
+        <aside className="lg:hidden flex flex-col items-center w-16 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 py-4 gap-2">
+          {CATEGORY_ORDER.map((cat) => {
+            const meta = categoryMeta[cat];
+            if (!meta) return null;
+            const Icon = ICON_MAP[meta.icon];
+            const isActive = activeCategory === cat;
+            return Icon ? (
+              <Link
+                key={cat}
+                to={`/${cat}`}
+                className={`p-3 rounded-lg transition-colors ${
+                  isActive
+                    ? "bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400"
+                    : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700"
+                }`}
+                title={meta.label}
+                aria-label={meta.label}
+              >
+                <Icon size={20} />
+              </Link>
+            ) : null;
+          })}
+        </aside>
 
         {/* ── Desktop sidebar (left, sticky) ── */}
         <aside className="hidden lg:flex lg:flex-col w-56 xl:w-64 shrink-0 sticky top-16 self-start h-[calc(100vh-4rem)]">
@@ -66,23 +93,7 @@ export default function Layout({ user, onSignIn, onSignOut }) {
         </aside>
 
         {/* ── Main content ── */}
-        <main className="flex-1 min-w-0 px-4 sm:px-6 py-6">
-          {/* Mobile category icons */}
-          <div className="lg:hidden mb-5">
-            <button
-              className="flex items-center justify-center gap-1.5 p-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors shadow-sm w-full"
-              onClick={() => setSidebarOpen(true)}
-              aria-label="Browse calculator categories"
-            >
-              {CATEGORY_ORDER.map((cat) => {
-                const meta = categoryMeta[cat];
-                if (!meta) return null;
-                const Icon = ICON_MAP[meta.icon];
-                return Icon ? <Icon key={cat} size={16} className="text-slate-600 dark:text-slate-400" /> : null;
-              })}
-            </button>
-          </div>
-
+        <main className="flex-1 min-w-0 px-4 sm:px-6 py-6 max-w-7xl mx-auto">
           <Outlet />
         </main>
       </div>
