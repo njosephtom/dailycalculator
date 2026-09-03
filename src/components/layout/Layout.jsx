@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Outlet, useLocation, Link } from "react-router-dom";
 import {
   DollarSign, Calculator, ChefHat, Heart, Clock,
-  ArrowLeftRight, Wrench, Monitor, ChevronLeft, ChevronRight, Menu,
+  ArrowLeftRight, Wrench, Monitor, ChevronLeft, ChevronRight, Menu, User,
 } from "lucide-react";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
@@ -66,6 +66,18 @@ export default function Layout({ user, onSignIn, onSignOut }) {
           >
             <Menu size={18} />
           </button>
+
+          {/* Sign In icon */}
+          {!user && (
+            <button
+              onClick={onSignIn}
+              className="p-2.5 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
+              title="Sign In"
+              aria-label="Sign In"
+            >
+              <User size={18} />
+            </button>
+          )}
 
           {CATEGORY_ORDER.map((cat) => {
             const meta = categoryMeta[cat];
