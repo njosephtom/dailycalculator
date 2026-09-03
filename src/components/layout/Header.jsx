@@ -81,10 +81,23 @@ export default function Header({ user, onSignIn, onSignOut }) {
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center gap-4">
         <Link to="/" className="flex items-center gap-2 shrink-0" aria-label="ConvertHub Home">
           <Calculator className="text-indigo-600 dark:text-indigo-400" size={22} />
-          <span className="font-bold text-lg text-slate-900 dark:text-white tracking-tight">
+          <span className="font-bold text-lg text-slate-900 dark:text-white tracking-tight hidden sm:inline">
             ConvertHub
           </span>
         </Link>
+
+        {/* Auth buttons (mobile left) */}
+        <div className="lg:hidden flex items-center gap-2">
+          {!user && (
+            <button
+              onClick={onSignIn}
+              className="flex items-center gap-2 text-xs px-2 py-1.5 bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-100 border border-slate-200 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors"
+            >
+              <User size={14} />
+              <span>Sign In</span>
+            </button>
+          )}
+        </div>
 
         {/* Search */}
         <div className="relative flex-1 max-w-md">

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Outlet, useLocation, Link } from "react-router-dom";
 import {
   DollarSign, Calculator, ChefHat, Heart, Clock,
-  ArrowLeftRight, Wrench, Monitor,
+  ArrowLeftRight, Wrench, Monitor, ChevronLeft, ChevronRight,
 } from "lucide-react";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
@@ -31,8 +31,20 @@ function usePageSEO() {
   return { title: "Calculator", description: null, path: pathname };
 }
 
+const COLOR = {
+  emerald: "text-emerald-600 dark:text-emerald-400",
+  indigo: "text-indigo-600 dark:text-indigo-400",
+  orange: "text-orange-500 dark:text-orange-400",
+  rose: "text-rose-500 dark:text-rose-400",
+  blue: "text-blue-600 dark:text-blue-400",
+  amber: "text-amber-500 dark:text-amber-400",
+  violet: "text-violet-600 dark:text-violet-400",
+  cyan: "text-cyan-600 dark:text-cyan-400",
+};
+
 export default function Layout({ user, onSignIn, onSignOut }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [mobileExpanded, setMobileExpanded] = useState(true);
   const seo = usePageSEO();
   const { pathname } = useLocation();
   const activeCategory = pathname.split("/")[1] || "";
@@ -46,25 +58,36 @@ export default function Layout({ user, onSignIn, onSignOut }) {
       <div className="flex flex-1 w-full">
 
         {/* ── Mobile: persistent icon sidebar ── */}
-        <aside className="lg:hidden flex flex-col items-center w-16 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 py-4 gap-2">
+        <aside className={`lg:hidden flex flex-col items-center bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 py-3 gap-1.5 transition-all ${
+          mobileExpanded ? "w-16" : "w-12"
+        }`}>
+          <button
+            onClick={() => setMobileExpanded(!mobileExpanded)}
+            className="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
+            aria-label={mobileExpanded ? "Collapse sidebar" : "Expand sidebar"}
+          >
+            {mobileExpanded ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
+          </button>
+
           {CATEGORY_ORDER.map((cat) => {
             const meta = categoryMeta[cat];
             if (!meta) return null;
             const Icon = ICON_MAP[meta.icon];
             const isActive = activeCategory === cat;
+            const colorClass = COLOR[meta.color] || COLOR.indigo;
             return Icon ? (
               <Link
                 key={cat}
                 to={`/${cat}`}
-                className={`p-3 rounded-lg transition-colors ${
+                className={`p-2.5 rounded-lg transition-colors ${
                   isActive
-                    ? "bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400"
-                    : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700"
+                    ? `${colorClass} bg-slate-100 dark:bg-slate-700`
+                    : `${colorClass} hover:bg-slate-100 dark:hover:bg-slate-700`
                 }`}
                 title={meta.label}
                 aria-label={meta.label}
               >
-                <Icon size={20} />
+                <Icon size={18} />
               </Link>
             ) : null;
           })}
