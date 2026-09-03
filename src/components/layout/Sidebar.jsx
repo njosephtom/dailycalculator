@@ -61,7 +61,7 @@ export default function Sidebar({ onClose, collapsed = false, user, onSignIn, on
         </div>
       )}
 
-      {/* Auth section */}
+      {/* Auth section - always show text in drawer (onClose = mobile drawer) */}
       <div className="px-2 py-3 border-b border-slate-200 dark:border-slate-700 shrink-0">
         {user ? (
           <div className="space-y-1">
@@ -73,7 +73,7 @@ export default function Sidebar({ onClose, collapsed = false, user, onSignIn, on
               className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors"
             >
               <User size={14} />
-              {!collapsed && <span className="flex-1 text-left">{user.displayName || "Dashboard"}</span>}
+              <span className="flex-1 text-left">{user.displayName || "Dashboard"}</span>
             </button>
             <button
               onClick={() => {
@@ -83,7 +83,7 @@ export default function Sidebar({ onClose, collapsed = false, user, onSignIn, on
               className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
             >
               <LogOut size={14} />
-              {!collapsed && <span className="flex-1 text-left">Sign Out</span>}
+              <span className="flex-1 text-left">Sign Out</span>
             </button>
           </div>
         ) : (
@@ -95,7 +95,7 @@ export default function Sidebar({ onClose, collapsed = false, user, onSignIn, on
             className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors border border-slate-200 dark:border-slate-600"
           >
             <User size={14} />
-            {!collapsed && <span className="flex-1 text-left">Sign In</span>}
+            <span className="flex-1 text-left">Sign In</span>
           </button>
         )}
       </div>
