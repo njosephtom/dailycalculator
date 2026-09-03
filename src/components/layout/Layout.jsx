@@ -1,12 +1,18 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
-import { Menu } from "lucide-react";
+import {
+  DollarSign, Calculator, ChefHat, Heart, Clock,
+  ArrowLeftRight, Wrench, Monitor,
+} from "lucide-react";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 import Footer from "./Footer";
 import PageSEO from "../ui/PageSEO";
 import { calculatorRegistry, categoryMeta } from "../../data/calculatorRegistry";
 import { useTrackUsage } from "../../hooks/useTrackUsage";
+
+const ICON_MAP = { DollarSign, Calculator, ChefHat, Heart, Clock, ArrowLeftRight, Wrench, Monitor };
+const CATEGORY_ORDER = ["finance", "math", "time", "health", "cooking", "convert", "tech", "misc"];
 
 function usePageSEO() {
   const { pathname } = useLocation();
@@ -61,15 +67,21 @@ export default function Layout({ user, onSignIn, onSignOut }) {
 
         {/* ── Main content ── */}
         <main className="flex-1 min-w-0 px-4 sm:px-6 py-6">
-          {/* Mobile menu toggle button */}
-          <button
-            className="lg:hidden mb-5 flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-3 py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors shadow-sm"
-            onClick={() => setSidebarOpen(true)}
-            aria-label="Open calculator menu"
-          >
-            <Menu size={15} />
-            Browse Calculators
-          </button>
+          {/* Mobile category icons */}
+          <div className="lg:hidden mb-5">
+            <button
+              className="flex items-center justify-center gap-1.5 p-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors shadow-sm w-full"
+              onClick={() => setSidebarOpen(true)}
+              aria-label="Browse calculator categories"
+            >
+              {CATEGORY_ORDER.map((cat) => {
+                const meta = categoryMeta[cat];
+                if (!meta) return null;
+                const Icon = ICON_MAP[meta.icon];
+                return Icon ? <Icon key={cat} size={16} className="text-slate-600 dark:text-slate-400" /> : null;
+              })}
+            </button>
+          </div>
 
           <Outlet />
         </main>

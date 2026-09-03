@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Calculator, Moon, Sun, Search, X } from "lucide-react";
+import { Calculator, Moon, Sun, Search, X, User } from "lucide-react";
 import { useTheme } from "../../context/ThemeContext";
 import { useCalculatorRegistry } from "../../context/CalculatorRegistryContext";
 
@@ -174,9 +174,10 @@ export default function Header({ user, onSignIn, onSignOut }) {
           ) : (
             <button
               onClick={onSignIn}
-              className="text-sm px-3 py-1.5 bg-indigo-600 text-white hover:bg-indigo-700 rounded-lg transition"
+              className="flex items-center gap-2 text-sm px-4 py-2 bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-100 border border-slate-200 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors"
             >
-              Sign In
+              <User size={16} />
+              <span>Sign In / Create account</span>
             </button>
           )}
         </div>
