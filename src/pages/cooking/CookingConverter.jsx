@@ -1,3 +1,4 @@
+import CalculatorTitle from "../../components/ui/CalculatorTitle";
 import React, { useState, useMemo } from "react";
 import { convertCooking } from "../../utils/cookingConversions";
 import InputField from "../../components/ui/InputField";
@@ -124,12 +125,11 @@ export default function CookingConverter() {
         <div className="space-y-4">
 
           {/* Title card */}
-          <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5">
-            <h1 className="text-xl font-bold text-slate-800 dark:text-white">Cooking Unit Converter</h1>
-            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-              Convert kitchen measurements with ingredient-specific density, or scale entire recipes up and down.
-            </p>
-          </div>
+          <CalculatorTitle
+            calculatorId="cooking-converter"
+            title="Cooking Unit Converter"
+            description="Convert kitchen measurements with ingredient-specific density, or scale entire recipes up and down."
+          />
 
           {/* Mode toggle */}
           <div className="flex gap-2">

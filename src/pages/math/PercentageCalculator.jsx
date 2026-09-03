@@ -1,3 +1,4 @@
+import CalculatorTitle from "../../components/ui/CalculatorTitle";
 import React, { useState } from "react";
 import {
   whatIsXPercentOfY,
@@ -79,12 +80,11 @@ export default function PercentageCalculator() {
         <div className="space-y-4">
 
           {/* Title card */}
-          <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5">
-            <h1 className="text-xl font-bold text-slate-800 dark:text-white">Percentage Calculator</h1>
-            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-              Five calculation modes — results update as you type.
-            </p>
-          </div>
+          <CalculatorTitle
+            calculatorId="percentage-calculator"
+            title="Percentage Calculator"
+            description="Five calculation modes — results update as you type."
+          />
 
           {/* Input form card — mode cards */}
           <div className="space-y-4">

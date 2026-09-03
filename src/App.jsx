@@ -5,6 +5,7 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth, firebaseConfigMissing } from "./utils/firebase";
 import { ThemeProvider } from "./context/ThemeContext";
 import { CalculatorRegistryProvider } from "./context/CalculatorRegistryContext";
+import { FavoritesProvider } from "./context/FavoritesContext";
 import Layout from "./components/layout/Layout";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
@@ -104,14 +105,15 @@ export default function App() {
   return (
     <ThemeProvider>
       <CalculatorRegistryProvider>
-        {showSignIn && <SignInPage onSignIn={(u) => { setUser(u); setShowSignIn(false); }} onClose={() => setShowSignIn(false)} />}
-        <Routes>
-          <Route path="/" element={<Layout user={user} onSignIn={() => setShowSignIn(true)} onSignOut={handleSignOut} />}>
-            <Route index element={<Home />} />
-            <Route path="dashboard" element={user ? <Dashboard user={user} onSignOut={handleSignOut} /> : <Home />} />
+        <FavoritesProvider user={user}>
+          {showSignIn && <SignInPage onSignIn={(u) => { setUser(u); setShowSignIn(false); }} onClose={() => setShowSignIn(false)} />}
+          <Routes>
+            <Route path="/" element={<Layout user={user} onSignIn={() => setShowSignIn(true)} onSignOut={handleSignOut} />}>
+              <Route index element={<Home />} />
+              <Route path="dashboard" element={user ? <Dashboard user={user} onSignOut={handleSignOut} /> : <Home />} />
 
-            {/* Category hub pages */}
-            <Route path=":category" element={<CategoryHub />} />
+              {/* Category hub pages */}
+              <Route path=":category" element={<CategoryHub />} />
 
             {/* ── Finance ── */}
             <Route path="finance/compound-interest"           element={<CompoundInterest />} />
@@ -165,8 +167,9 @@ export default function App() {
             {/* Catch-all */}
             <Route path="*" element={<ComingSoon />} />
           </Route>
-        </Routes>
-        <Analytics />
+          </Routes>
+          <Analytics />
+        </FavoritesProvider>
       </CalculatorRegistryProvider>
     </ThemeProvider>
   );

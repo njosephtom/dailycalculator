@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { calculatorRegistry, categoryMeta } from "../data/calculatorRegistry";
-import { ArrowRight, CheckCircle, Clock, Search, X } from "lucide-react";
+import { ArrowRight, CheckCircle, Clock, Search, X, Heart } from "lucide-react";
+import { useFavorites } from "../context/FavoritesContext";
 
 function groupBySubcategory(tools) {
   const map = new Map();
@@ -14,6 +15,15 @@ function groupBySubcategory(tools) {
 }
 
 function ToolCard({ tool }) {
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const isFav = isFavorite(tool.id);
+
+  const handleFavClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleFavorite(tool.id);
+  };
+
   return (
     <Link
       to={tool.path}
@@ -36,10 +46,22 @@ function ToolCard({ tool }) {
           </p>
         </div>
       </div>
-      <ArrowRight
-        size={15}
-        className="text-slate-300 dark:text-slate-600 group-hover:text-indigo-500 shrink-0 ml-4 transition-colors"
-      />
+      <div className="flex items-center gap-2 shrink-0 ml-4">
+        <button
+          onClick={handleFavClick}
+          className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+          title={isFav ? "Remove from favorites" : "Add to favorites"}
+        >
+          <Heart
+            size={16}
+            className={isFav ? "text-red-500 fill-red-500" : "text-slate-300 dark:text-slate-600"}
+          />
+        </button>
+        <ArrowRight
+          size={15}
+          className="text-slate-300 dark:text-slate-600 group-hover:text-indigo-500 transition-colors"
+        />
+      </div>
     </Link>
   );
 }

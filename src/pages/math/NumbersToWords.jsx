@@ -1,3 +1,4 @@
+import CalculatorTitle from "../../components/ui/CalculatorTitle";
 import React, { useState } from "react";
 import { convertNumberToWords, REGIONS } from "../../utils/numbersToWords";
 import InputField from "../../components/ui/InputField";
@@ -102,12 +103,11 @@ export default function NumbersToWords() {
         {/* LEFT COLUMN — Input + Results */}
         <div className="space-y-4">
           {/* Title card */}
-          <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5">
-            <h1 className="text-xl font-bold text-slate-800 dark:text-white">Numbers to Words Converter</h1>
-            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-              Convert numbers to words in multiple regions and numbering systems.
-            </p>
-          </div>
+          <CalculatorTitle
+            calculatorId="numbers-to-words-converter"
+            title="Numbers to Words Converter"
+            description="Convert numbers to words in multiple regions and numbering systems."
+          />
 
           {/* Input card */}
           <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5">

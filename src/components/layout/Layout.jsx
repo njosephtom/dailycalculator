@@ -6,6 +6,7 @@ import Sidebar from "./Sidebar";
 import Footer from "./Footer";
 import PageSEO from "../ui/PageSEO";
 import { calculatorRegistry, categoryMeta } from "../../data/calculatorRegistry";
+import { useTrackUsage } from "../../hooks/useTrackUsage";
 
 function usePageSEO() {
   const { pathname } = useLocation();
@@ -27,6 +28,7 @@ function usePageSEO() {
 export default function Layout({ user, onSignIn, onSignOut }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const seo = usePageSEO();
+  useTrackUsage(user);
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 transition-colors duration-200 flex flex-col">

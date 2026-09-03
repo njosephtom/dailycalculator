@@ -1,3 +1,4 @@
+import CalculatorTitle from "../../components/ui/CalculatorTitle";
 import React, { useState, useMemo } from "react";
 import {
   calculateBMI,
@@ -90,12 +91,11 @@ export default function BmiBmr() {
         <div className="space-y-4">
 
           {/* Title card */}
-          <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5">
-            <h1 className="text-xl font-bold text-slate-800 dark:text-white">BMI & BMR Calculator</h1>
-            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-              Calculate your Body Mass Index and daily caloric requirements.
-            </p>
-          </div>
+          <CalculatorTitle
+            calculatorId="bmi-bmr"
+            title="BMI & BMR Calculator"
+            description="Calculate your Body Mass Index and daily caloric requirements."
+          />
 
           {/* Input form card */}
           <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5 space-y-4">

@@ -1,3 +1,4 @@
+import CalculatorTitle from "../../components/ui/CalculatorTitle";
 import React, { useState, useMemo } from "react";
 import InputField from "../../components/ui/InputField";
 import { calculateBMI, bmiCategory } from "../../utils/bmiCalculations";
@@ -73,12 +74,11 @@ export default function BmiCalculator() {
         <div className="space-y-4">
 
           {/* Title card */}
-          <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5">
-            <h1 className="text-xl font-bold text-slate-800 dark:text-white">BMI Calculator</h1>
-            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-              Calculate your Body Mass Index and see where you fall in the standard classification.
-            </p>
-          </div>
+          <CalculatorTitle
+            calculatorId="bmi-calculator"
+            title="BMI Calculator"
+            description="Calculate your Body Mass Index and see where you fall in the standard classification."
+          />
 
           {/* Input form card */}
           <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5 space-y-4">

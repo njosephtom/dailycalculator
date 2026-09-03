@@ -1,3 +1,4 @@
+import CalculatorTitle from "../../components/ui/CalculatorTitle";
 import React, { useState, useEffect } from "react";
 import { X, Plus, Clock, ChevronUp, ChevronDown } from "lucide-react";
 import { CITIES_DATA } from "../../data/citiesData";
@@ -335,12 +336,11 @@ export default function TimeZoneCalculator() {
   return (
     <div className="space-y-4">
       {/* Title card */}
-      <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5">
-        <h1 className="text-xl font-bold text-slate-800 dark:text-white">Time Zone Calculator</h1>
-        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-          Click on any hour to see what time it will be in other cities. Reorder cities using up/down arrows.
-        </p>
-      </div>
+      <CalculatorTitle
+            calculatorId="time-zone-calculator"
+            title="Time Zone Calculator"
+            description="Click on any hour to see what time it will be in other cities. Reorder cities using up/down arrows."
+          />
 
       {/* Search and add city */}
       <CitySelector onAdd={handleAddCity} addedCities={cities} />

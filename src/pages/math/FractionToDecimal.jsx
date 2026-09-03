@@ -1,3 +1,4 @@
+import CalculatorTitle from "../../components/ui/CalculatorTitle";
 import React, { useState, useMemo } from "react";
 import { convertFraction } from "../../utils/fractionDecimal";
 import { ChevronDown, ChevronUp } from "lucide-react";
@@ -53,12 +54,11 @@ export default function FractionToDecimal() {
         <div className="space-y-4">
 
           {/* Title card */}
-          <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5">
-            <h1 className="text-xl font-bold text-slate-800 dark:text-white">Fraction to Decimal Calculator</h1>
-            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-              Convert any fraction or mixed number to a decimal and percentage instantly.
-            </p>
-          </div>
+          <CalculatorTitle
+            calculatorId="fraction-to-decimal-calculator"
+            title="Fraction to Decimal Calculator"
+            description="Convert any fraction or mixed number to a decimal and percentage instantly."
+          />
 
           {/* Input form card */}
           <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5 space-y-4">

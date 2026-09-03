@@ -1,3 +1,4 @@
+import CalculatorTitle from "../../components/ui/CalculatorTitle";
 import React, { useState, useMemo } from "react";
 import InputField from "../../components/ui/InputField";
 import SelectField from "../../components/ui/SelectField";
@@ -96,12 +97,11 @@ export default function LoanCalculator() {
         <div className="space-y-4">
 
           {/* Title card */}
-          <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5">
-            <h1 className="text-xl font-bold text-slate-800 dark:text-white">Loan Calculator</h1>
-            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-              Calculate monthly payments, total interest, and see your full amortization schedule. Extra payments shorten your term.
-            </p>
-          </div>
+          <CalculatorTitle
+            calculatorId="loan-calculator"
+            title="Loan Calculator"
+            description="Calculate monthly payments, total interest, and see your full amortization schedule. Extra payments shorten your term."
+          />
 
           {/* Input form card */}
           <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5 space-y-4">

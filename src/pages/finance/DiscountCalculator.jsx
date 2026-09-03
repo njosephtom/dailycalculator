@@ -1,3 +1,4 @@
+import CalculatorTitle from "../../components/ui/CalculatorTitle";
 import React, { useState, useMemo } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import InputField from "../../components/ui/InputField";
@@ -136,15 +137,12 @@ export default function DiscountCalculator() {
         {/* ── LEFT COLUMN ──────────────────────────── */}
         <div className="space-y-4">
           {/* Title card */}
-          <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5">
-            <h1 className="text-xl font-bold text-slate-800 dark:text-white">
-              Discount &amp; Sales Tax Calculator
-            </h1>
-            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-              Calculate the final price after applying a discount and sales tax.
-              See how much you save instantly.
-            </p>
-          </div>
+          <CalculatorTitle
+            calculatorId="discount-calculator"
+            title="Discount &amp; Sales Tax Calculator"
+            description="Calculate the final price after applying a discount and sales tax.
+              See how much you save instantly."
+          />
 
           {/* Input form card */}
           <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5 space-y-4">

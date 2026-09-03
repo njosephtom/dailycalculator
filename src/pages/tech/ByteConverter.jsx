@@ -1,3 +1,4 @@
+import CalculatorTitle from "../../components/ui/CalculatorTitle";
 import React, { useState, useMemo } from "react";
 import InputField from "../../components/ui/InputField";
 import SelectField from "../../components/ui/SelectField";
@@ -143,15 +144,12 @@ export default function ByteConverter() {
         {/* LEFT COLUMN */}
         <div className="space-y-4">
           {/* Title card */}
-          <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5">
-            <h1 className="text-xl font-bold text-slate-800 dark:text-white">
-              Byte / Data Converter
-            </h1>
-            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-              Convert between bits, bytes, kilobytes, megabytes, gigabytes,
-              terabytes and petabytes in decimal (SI) or binary (IEC) units.
-            </p>
-          </div>
+          <CalculatorTitle
+            calculatorId="byte-converter"
+            title="Byte / Data Converter"
+            description="Convert between bits, bytes, kilobytes, megabytes, gigabytes,
+              terabytes and petabytes in decimal (SI) or binary (IEC) units."
+          />
 
           {/* Input form card */}
           <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5 space-y-4">

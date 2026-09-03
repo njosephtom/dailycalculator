@@ -1,3 +1,4 @@
+import CalculatorTitle from "../../components/ui/CalculatorTitle";
 import React, { useState, useMemo } from "react";
 import { calcSIP, sipSchedule } from "../../utils/sipCalculator";
 import { ChevronDown, ChevronUp } from "lucide-react";
@@ -80,12 +81,11 @@ export default function SipCalculator() {
         <div className="space-y-4">
 
           {/* Title card */}
-          <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5">
-            <h1 className="text-xl font-bold text-slate-800 dark:text-white">SIP Calculator</h1>
-            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-              Calculate the maturity value of a Systematic Investment Plan with monthly contributions.
-            </p>
-          </div>
+          <CalculatorTitle
+            calculatorId="sip-calculator"
+            title="SIP Calculator"
+            description="Calculate the maturity value of a Systematic Investment Plan with monthly contributions."
+          />
 
           {/* Input form card */}
           <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5 space-y-6">

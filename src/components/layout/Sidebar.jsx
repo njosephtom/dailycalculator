@@ -75,8 +75,12 @@ export default function Sidebar({ onClose }) {
           return (
             <div key={cat}>
               {/* Category row */}
-              <button
-                onClick={() => setOpen((prev) => ({ ...prev, [cat]: !prev[cat] }))}
+              <Link
+                to={`/${cat}`}
+                onClick={() => {
+                  setOpen((prev) => ({ ...prev, [cat]: !prev[cat] }));
+                  onClose?.();
+                }}
                 className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left transition-colors group ${
                   isCatActive
                     ? `${c.bg} ${c.active} font-semibold`
@@ -92,7 +96,7 @@ export default function Sidebar({ onClose }) {
                   ? <ChevronDown size={13} className="text-slate-400 shrink-0" />
                   : <ChevronRight size={13} className="text-slate-400 shrink-0" />
                 }
-              </button>
+              </Link>
 
               {/* Calculator links */}
               {isOpen && (

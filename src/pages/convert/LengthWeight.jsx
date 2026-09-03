@@ -1,3 +1,4 @@
+import CalculatorTitle from "../../components/ui/CalculatorTitle";
 import React, { useState, useCallback } from "react";
 import { convert, lengthUnits, weightUnits } from "../../utils/unitConversions";
 import SelectField from "../../components/ui/SelectField";
@@ -101,12 +102,11 @@ export default function LengthWeight() {
         <div className="space-y-4">
 
           {/* Title card */}
-          <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5">
-            <h1 className="text-xl font-bold text-slate-800 dark:text-white">Length & Weight Converter</h1>
-            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-              Bi-directional converter — edit either field, swap units with one click.
-            </p>
-          </div>
+          <CalculatorTitle
+            calculatorId="length-weight"
+            title="Length & Weight Converter"
+            description="Bi-directional converter — edit either field, swap units with one click."
+          />
 
           {/* Length converter */}
           <ConverterPanel title="Length Converter" unitMap={lengthUnits} id="length" />
