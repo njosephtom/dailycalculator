@@ -69,20 +69,22 @@ export default function Sidebar({ onClose, collapsed = false, user, onSignIn, on
                 navigate("/dashboard");
                 onClose?.();
               }}
-              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors"
+              className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors ${collapsed ? "justify-center" : ""}`}
+              title={collapsed ? user.displayName || "Dashboard" : undefined}
             >
               <User size={14} />
-              <span className="flex-1 text-left">{user.displayName || "Dashboard"}</span>
+              {!collapsed && <span className="flex-1 text-left">{user.displayName || "Dashboard"}</span>}
             </button>
             <button
               onClick={() => {
                 onSignOut?.();
                 onClose?.();
               }}
-              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+              className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors ${collapsed ? "justify-center" : ""}`}
+              title={collapsed ? "Sign Out" : undefined}
             >
               <LogOut size={14} />
-              <span className="flex-1 text-left">Sign Out</span>
+              {!collapsed && <span className="flex-1 text-left">Sign Out</span>}
             </button>
           </div>
         ) : (
@@ -91,10 +93,11 @@ export default function Sidebar({ onClose, collapsed = false, user, onSignIn, on
               onSignIn?.();
               onClose?.();
             }}
-            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors border border-slate-200 dark:border-slate-600"
+            className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors border border-slate-200 dark:border-slate-600 ${collapsed ? "justify-center" : ""}`}
+            title={collapsed ? "Sign In" : undefined}
           >
             <User size={14} />
-            <span className="flex-1 text-left">Sign In</span>
+            {!collapsed && <span className="flex-1 text-left">Sign In</span>}
           </button>
         )}
       </div>
