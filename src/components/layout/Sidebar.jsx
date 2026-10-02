@@ -22,7 +22,7 @@ const COLOR = {
 const CATEGORY_ORDER = ["finance", "math", "time", "health", "cooking", "convert", "tech", "misc"];
 
 const grouped = CATEGORY_ORDER.reduce((acc, cat) => {
-  acc[cat] = calculatorRegistry.filter((c) => c.category === cat);
+  acc[cat] = calculatorRegistry.filter((c) => c.category === cat && !c.hidden);
   return acc;
 }, {});
 

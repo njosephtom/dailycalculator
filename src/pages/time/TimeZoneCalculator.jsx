@@ -1,401 +1,363 @@
-import CalculatorTitle from "../../components/ui/CalculatorTitle";
-import React, { useState, useEffect } from "react";
-import { X, Plus, Clock, ChevronUp, ChevronDown } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { X, Copy, Home } from "lucide-react";
 import { CITIES_DATA } from "../../data/citiesData";
 
-// Add your own GeoNames username here for better results
-// Sign up at https://www.geonames.org/login for a free account
-const GEONAMES_USERNAME = "demo";
+const TILE_W = 52;
+const HOURS_SPAN = 48;
+const ACCENTS = ['#3fa796','#e8a33d','#c97b8a','#6f9bd8','#8b7fd1','#d18b4c','#5fb0a0','#c86b5a'];
 
-const fetchCitiesFromGeoNames = async (searchTerm) => {
-  if (!searchTerm || searchTerm.length < 1) return [];
+const DEFAULT_CITIES = [
+  { name: "Vancouver", timezone: "America/Vancouver", code: "CA" },
+  { name: "Tokyo", timezone: "Asia/Tokyo", code: "JP" },
+  { name: "Mumbai", timezone: "Asia/Kolkata", code: "IN" },
+];
 
-  try {
-    const response = await fetch(
-      `https://api.geonames.org/searchJSON?name_startsWith=${encodeURIComponent(searchTerm)}&featureClass=P&maxRows=10&username=${GEONAMES_USERNAME}`
-    );
-    const data = await response.json();
-
-    if (!data.geonames) return [];
-
-    return data.geonames.map((city) => ({
-      name: city.name,
-      timezone: city.timezone || "UTC",
-      code: city.countryCode || "XX",
-      country: city.countryName || "",
-    }));
-  } catch (error) {
-    console.error("Error fetching cities from GeoNames:", error);
-    return [];
-  }
-};
-
-const DEFAULT_CITIES = CITIES_DATA.slice(0, 3);
-
-function getTimeInTimezone(baseDate, baseTimezone, targetTimezone) {
-  const baseTime = new Date(baseDate.toLocaleString('en-US', { timeZone: baseTimezone }));
-  const targetTime = new Date(baseTime.toLocaleString('en-US', { timeZone: targetTimezone }));
-  return targetTime;
+function getTimezoneAbbr(tz) {
+  const now = new Date();
+  return new Intl.DateTimeFormat('en-US', { timeZone: tz, timeZoneName: 'short' })
+    .formatToParts(now)
+    .find(p => p.type === 'timeZoneName')?.value || 'UTC';
 }
 
-function CityTimeline({ city, selectedDate, selectedHour, onSelectHour, isHome, onMoveUp, onMoveDown, canMoveUp, canMoveDown, onRemove }) {
-  let displayTime;
-  let displayHour;
+function zonedMidnightUTC(dateStr, tz) {
+  const [y, m, d] = dateStr.split('-').map(Number);
+  let guess = new Date(Date.UTC(y, m - 1, d, 0, 0, 0));
+  for (let i = 0; i < 2; i++) {
+    const dtf = new Intl.DateTimeFormat('en-US', {
+      timeZone: tz, hourCycle: 'h23',
+      year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', minute: '2-digit', second: '2-digit'
+    });
+    const p = {};
+    dtf.formatToParts(guess).forEach(x => p[x.type] = x.value);
+    const asUTC = Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour, +p.minute, +p.second);
+    guess = new Date(asUTC - (asUTC - guess.getTime()));
+  }
+  return guess;
+}
 
-  if (selectedDate) {
-    displayTime = new Date(selectedDate.toLocaleString('en-US', { timeZone: city.timezone }));
-    displayHour = displayTime.getHours() + displayTime.getMinutes() / 60;
-  } else {
+function partsAt(tz, date, hour12) {
+  const dtf = new Intl.DateTimeFormat('en-US', {
+    timeZone: tz, hourCycle: hour12 ? 'h12' : 'h23',
+    hour: '2-digit', minute: '2-digit', weekday: 'short', day: 'numeric', month: 'short'
+  });
+  const p = {};
+  dtf.formatToParts(date).forEach(x => p[x.type] = x.value);
+  return p;
+}
+
+function dayPeriod(date, tz) {
+  const s = new Intl.DateTimeFormat('en-US', { timeZone: tz, hour: 'numeric', hour12: true }).format(date);
+  return /am/i.test(s) ? 'am' : 'pm';
+}
+
+function TimeZoneCalculator() {
+  const getTodayDate = () => {
     const now = new Date();
-    displayTime = new Date(now.toLocaleString('en-US', { timeZone: city.timezone }));
-    displayHour = displayTime.getHours() + displayTime.getMinutes() / 60;
-  }
-
-  const timeString = displayTime.toLocaleTimeString('en-US', {
-    timeZone: city.timezone,
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: true,
-  });
-
-  const dateString = displayTime.toLocaleDateString('en-US', {
-    timeZone: city.timezone,
-    weekday: 'short',
-    month: 'short',
-    day: 'numeric',
-  });
-
-  const hours = Array.from({ length: 24 }, (_, i) => i);
-
-  return (
-    <div className={`rounded-xl overflow-hidden border transition-all ${
-      isHome
-        ? 'bg-indigo-50 dark:bg-indigo-900/20 border-indigo-300 dark:border-indigo-600'
-        : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700'
-    }`}>
-      <div className="flex">
-        {/* Left info section */}
-        <div className="w-32 border-r border-slate-200 dark:border-slate-700 p-4 flex flex-col justify-between shrink-0">
-          <div>
-            <div className="flex items-baseline gap-1.5 mb-1">
-              <h3 className="font-semibold text-sm text-slate-800 dark:text-slate-100">{city.name}</h3>
-              {isHome && (
-                <span className="text-[9px] uppercase tracking-wider font-bold bg-indigo-600 text-white px-1.5 py-0.5 rounded">
-                  Home
-                </span>
-              )}
-              <span className="text-[10px] uppercase tracking-wider font-medium text-slate-500 dark:text-slate-400">{city.code}</span>
-            </div>
-            <p className="text-xl font-bold text-indigo-600 dark:text-indigo-400 font-mono mb-0.5">
-              {timeString}
-            </p>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 mb-2">
-              {dateString}
-            </p>
-          </div>
-
-          <div className="flex items-center gap-1">
-            <button
-              onClick={onMoveUp}
-              disabled={!canMoveUp}
-              className="p-1 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors"
-              title="Move up"
-            >
-              <ChevronUp size={14} />
-            </button>
-            <button
-              onClick={onMoveDown}
-              disabled={!canMoveDown}
-              className="p-1 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors"
-              title="Move down"
-            >
-              <ChevronDown size={14} />
-            </button>
-            <button
-              onClick={() => onRemove(city.timezone)}
-              className="p-1 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors ml-auto"
-              aria-label="Remove city"
-            >
-              <X size={14} />
-            </button>
-          </div>
-        </div>
-
-        {/* Timeline section */}
-        <div className="flex-1 px-3 py-3 overflow-x-auto">
-          <div className="flex gap-0.5">
-            {hours.map((hour) => {
-              const displayHourNum = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
-              const period = hour < 12 ? 'am' : 'pm';
-              const isCurrentHour = Math.floor(displayHour) === hour;
-              const isSelected = selectedHour === hour;
-
-              return (
-                <button
-                  key={hour}
-                  onClick={() => onSelectHour(hour)}
-                  className={`flex-shrink-0 w-8 h-12 rounded-md flex items-center justify-center text-[9px] font-bold transition-all cursor-pointer ${
-                    isSelected
-                      ? 'bg-indigo-600 dark:bg-indigo-500 text-white ring-2 ring-indigo-400'
-                      : isCurrentHour
-                      ? 'bg-indigo-500 dark:bg-indigo-600 text-white'
-                      : 'bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-200 dark:hover:bg-indigo-900/60'
-                  }`}
-                  title={`${displayHourNum}:00 ${period}`}
-                >
-                  <span className="text-center leading-tight">
-                    <div className="text-[10px]">{displayHourNum}</div>
-                    <div className="text-[7px]">{period}</div>
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function CitySelector({ onAdd, addedCities }) {
-  const [search, setSearch] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
-  const [results, setResults] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const selectorRef = React.useRef(null);
-
-  const handleSearch = async (value) => {
-    setSearch(value);
-
-    if (!value || value.length < 1) {
-      setResults([]);
-      return;
-    }
-
-    setIsLoading(true);
-
-    // First, search local cities data
-    const localMatches = CITIES_DATA.filter(city =>
-      city.name.toLowerCase().includes(value.toLowerCase()) ||
-      city.country.toLowerCase().includes(value.toLowerCase()) ||
-      city.timezone.toLowerCase().includes(value.toLowerCase())
-    );
-
-    // Filter out already added cities
-    const filtered = localMatches.filter(
-      city => !addedCities.some(c => c.timezone === city.timezone)
-    );
-
-    setResults(filtered);
-    setIsLoading(false);
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, '0');
+    const d = String(now.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
   };
 
-  const closeDropdown = () => {
-    setIsOpen(false);
-  };
-
-  React.useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (selectorRef.current && !selectorRef.current.contains(event.target)) {
-        closeDropdown();
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
-    }
-  }, [isOpen]);
-
-  return (
-    <div className="relative mb-4" ref={selectorRef}>
-      <div className="relative">
-        <input
-          type="text"
-          placeholder="Search city or timezone..."
-          value={search}
-          onChange={(e) => {
-            handleSearch(e.target.value);
-            setIsOpen(true);
-          }}
-          onFocus={() => setIsOpen(true)}
-          className="w-full px-4 py-3 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-        />
-        {search && (
-          <button
-            onClick={() => {
-              setSearch("");
-              setResults([]);
-            }}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
-          >
-            <X size={16} />
-          </button>
-        )}
-      </div>
-
-      {isOpen && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg z-10 max-h-64 overflow-y-auto">
-          {isLoading ? (
-            <div className="px-4 py-4 text-center text-sm text-slate-500 dark:text-slate-400">
-              <div className="inline-block animate-spin rounded-full h-4 w-4 border-2 border-indigo-500 border-t-transparent"></div>
-              <p className="mt-2">Searching cities...</p>
-            </div>
-          ) : results.length > 0 ? (
-            results.map((city) => (
-              <button
-                key={`${city.timezone}-${city.name}`}
-                onClick={() => {
-                  onAdd(city);
-                  setSearch("");
-                  setResults([]);
-                  setIsOpen(false);
-                }}
-                className="w-full text-left px-4 py-3 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-colors text-sm border-b border-slate-100 dark:border-slate-700 last:border-0"
-              >
-                <p className="font-medium text-slate-900 dark:text-white">{city.name}</p>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
-                  {city.country} • {city.timezone}
-                </p>
-              </button>
-            ))
-          ) : search.length > 0 ? (
-            <div className="px-4 py-3 text-center text-sm text-slate-500 dark:text-slate-400">
-              No matching cities found
-            </div>
-          ) : (
-            <div className="px-4 py-3 text-center text-sm text-slate-500 dark:text-slate-400">
-              Type a city name or timezone to search...
-            </div>
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
-
-export default function TimeZoneCalculator() {
-  const [currentTime, setCurrentTime] = useState(new Date());
-  const [selectedHour, setSelectedHour] = useState(null);
-  const [selectedDate, setSelectedDate] = useState(null);
   const [cities, setCities] = useState(DEFAULT_CITIES);
+  const [use24Hour, setUse24Hour] = useState(false);
+  const [selStart, setSelStart] = useState(21);
+  const [selEnd, setSelEnd] = useState(21.5);
+  const [dragging, setDragging] = useState(false);
+  const dragStart = useRef(null);
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const [browserTz] = useState(() => Intl.DateTimeFormat().resolvedOptions().timeZone);
+  const [selectedDate] = useState(getTodayDate());
+  const scrollRefs = useRef([]);
+
+  const homeMidnight = zonedMidnightUTC(selectedDate, browserTz);
+  const timelineStart = new Date(homeMidnight.getTime());
+  const timeline = Array.from({ length: HOURS_SPAN }, (_, i) =>
+    new Date(timelineStart.getTime() + i * 3600 * 1000)
+  );
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      if (!selectedDate) {
-        setCurrentTime(new Date());
-      }
-    }, 1000);
-    return () => clearInterval(timer);
-  }, [selectedDate]);
+    const interval = setInterval(() => setCurrentTime(new Date()), 1000);
+    const handleMouseUp = () => setDragging(false);
+    document.addEventListener('mouseup', handleMouseUp);
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, []);
 
-  const handleSelectHour = (hour) => {
-    if (selectedHour === hour) {
-      setSelectedHour(null);
-      setSelectedDate(null);
-    } else {
-      const homeTimezone = cities[0].timezone;
-      const now = new Date();
-      const homeTime = new Date(now.toLocaleString('en-US', { timeZone: homeTimezone }));
-      homeTime.setHours(hour, 0, 0, 0);
 
-      const offset = homeTime.getTime() - new Date(homeTime.toLocaleString('en-US', { timeZone: homeTimezone })).getTime();
-      const selectedDateTime = new Date(now.getTime() + offset);
+  const handleAddCity = (e) => {
+    const cityId = e.target.value;
+    if (!cityId) return;
+    const cityData = CITIES_DATA.find(c => c.name === cityId);
+    if (cityData && !cities.find(c => c.timezone === cityData.timezone)) {
+      setCities([...cities, { name: cityData.name, timezone: cityData.timezone, code: cityData.code }]);
+    }
+    e.target.value = '';
+  };
 
-      setSelectedDate(selectedDateTime);
-      setSelectedHour(hour);
+  const handleRemoveCity = (idx) => {
+    if (cities.length > 1) {
+      setCities(cities.filter((_, i) => i !== idx));
     }
   };
 
-  const handleAddCity = (city) => {
-    setCities([...cities, city]);
+  const handleScroll = (e, idx) => {
+    scrollRefs.current.forEach((ref, i) => {
+      if (i !== idx && ref) ref.scrollLeft = e.target.scrollLeft;
+    });
   };
 
-  const handleRemoveCity = (timezone) => {
-    setCities(cities.filter(c => c.timezone !== timezone));
+  const handleCopyTimes = () => {
+    const lo = Math.min(selStart, selEnd);
+    const hi = Math.max(selStart, selEnd);
+    const startT = timeline[Math.floor(lo)];
+    const endMs = timeline[0].getTime() + hi * 3600000;
+    const endT = new Date(endMs);
+
+    const lines = cities.map(city => {
+      const sp = partsAt(city.timezone, startT, !use24Hour);
+      const ep = partsAt(city.timezone, endT, !use24Hour);
+      const ampmS = !use24Hour ? ' ' + dayPeriod(startT, city.timezone) : '';
+      const ampmE = !use24Hour ? ' ' + dayPeriod(endT, city.timezone) : '';
+      return `${city.name}: ${sp.hour}:${sp.minute}${ampmS} – ${ep.hour}:${ep.minute}${ampmE} (${sp.weekday} ${sp.month} ${sp.day})`;
+    });
+
+    navigator.clipboard.writeText(lines.join('\n')).then(() => {
+      alert('Copied to clipboard');
+    });
   };
 
-  const handleMoveUp = (index) => {
-    if (index > 0) {
-      const newCities = [...cities];
-      [newCities[index], newCities[index - 1]] = [newCities[index - 1], newCities[index]];
-      setCities(newCities);
-    }
+  const handleGoogleCalendar = () => {
+    const lo = Math.min(selStart, selEnd);
+    const hi = Math.max(selStart, selEnd);
+    const startT = timeline[Math.floor(lo)];
+    const endT = new Date(timeline[0].getTime() + hi * 3600000);
+    const fmt = d => d.toISOString().replace(/[-:]/g,'').split('.')[0]+'Z';
+    const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=Meeting&dates=${fmt(startT)}/${fmt(endT)}`;
+    window.open(url, '_blank');
   };
 
-  const handleMoveDown = (index) => {
-    if (index < cities.length - 1) {
-      const newCities = [...cities];
-      [newCities[index], newCities[index + 1]] = [newCities[index + 1], newCities[index]];
-      setCities(newCities);
-    }
-  };
+  const getAccentColor = (idx) => ACCENTS[idx % ACCENTS.length];
 
   return (
     <div className="space-y-4">
-      {/* Title card */}
-      <CalculatorTitle
-            calculatorId="time-zone-calculator"
-            title="Time Zone Calculator"
-            description="Click on any hour to see what time it will be in other cities. Reorder cities using up/down arrows."
-          />
-
-      {/* Search and add city */}
-      <CitySelector onAdd={handleAddCity} addedCities={cities} />
-
-      {/* Cities timelines */}
-      <div className="space-y-3">
-        {cities.length > 0 ? (
-          cities.map((city, index) => (
-            <CityTimeline
-              key={city.timezone}
-              city={city}
-              selectedDate={selectedDate}
-              selectedHour={selectedHour}
-              onSelectHour={handleSelectHour}
-              isHome={index === 0}
-              onMoveUp={() => handleMoveUp(index)}
-              onMoveDown={() => handleMoveDown(index)}
-              canMoveUp={index > 0}
-              canMoveDown={index < cities.length - 1}
-              onRemove={handleRemoveCity}
-            />
-          ))
-        ) : (
-          <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-8 text-center">
-            <Clock className="mx-auto mb-3 text-slate-400" size={32} />
-            <p className="text-slate-600 dark:text-slate-400">Add a city to compare time zones</p>
+      {/* Header */}
+      <div className="flex justify-between items-end flex-wrap gap-4 border-b border-slate-200 dark:border-slate-700 pb-4 mb-4">
+        <div>
+          <div className="text-xs uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2">Time Zone Calculator</div>
+          <h1 className="text-2xl font-semibold">Meeting Time Finder</h1>
+        </div>
+        <div className="flex gap-2 items-center">
+          <select
+            onChange={handleAddCity}
+            defaultValue=""
+            className="px-3 py-2 rounded-lg bg-slate-200 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 text-sm"
+          >
+            <option value="">+ Add city…</option>
+            {CITIES_DATA.map(city => (
+              !cities.find(c => c.timezone === city.timezone) && (
+                <option key={city.timezone} value={city.name}>
+                  {city.name} — {city.country}
+                </option>
+              )
+            ))}
+          </select>
+          <div className="flex border border-slate-300 dark:border-slate-600 rounded-lg overflow-hidden">
+            <button
+              onClick={() => setUse24Hour(false)}
+              className={`px-4 py-2 text-sm font-medium transition-colors ${
+                !use24Hour
+                  ? 'bg-indigo-600 text-white'
+                  : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300'
+              }`}
+            >
+              12h
+            </button>
+            <button
+              onClick={() => setUse24Hour(true)}
+              className={`px-4 py-2 text-sm font-medium transition-colors ${
+                use24Hour
+                  ? 'bg-indigo-600 text-white'
+                  : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300'
+              }`}
+            >
+              24h
+            </button>
           </div>
-        )}
+          <button
+            onClick={() => {
+              requestAnimationFrame(() => {
+                const nowOffsetHours = (currentTime.getTime() - timelineStart.getTime()) / 3600000;
+                const currentHour = Math.floor(nowOffsetHours);
+                setSelStart(currentHour);
+                setSelEnd(currentHour + 1);
+                const scrollPos = Math.max(0, (currentHour - 12) * TILE_W);
+                scrollRefs.current.forEach(ref => {
+                  if (ref) {
+                    ref.scrollLeft = scrollPos;
+                  }
+                });
+              });
+            }}
+            className="px-4 py-2 text-sm font-medium transition-colors bg-amber-100 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 border border-amber-300 dark:border-amber-700 rounded-lg hover:bg-amber-200 dark:hover:bg-amber-900/40"
+          >
+            Now
+          </button>
+        </div>
       </div>
 
-      {/* Info card */}
-      <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5">
-        <h2 className="text-sm font-bold text-slate-700 dark:text-slate-200 mb-3 flex items-center gap-2">
-          <Clock size={16} className="text-indigo-600 dark:text-indigo-400" />
-          How to Use
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-slate-600 dark:text-slate-400">
-          <div>
-            <p className="font-medium text-slate-700 dark:text-slate-300 mb-1">Select a Time</p>
-            <p>Click any hour on a timeline to see what time it will be in all other cities at that moment.</p>
+      {/* Board */}
+      <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden">
+        {cities.map((city, cityIdx) => (
+          <div key={city.timezone} className={`flex border-b last:border-b-0 dark:border-slate-700 relative ${cityIdx < cities.length - 1 ? 'border-slate-200' : ''}`}>
+            {/* Info Panel */}
+            <div className="w-48 flex-shrink-0 border-r border-slate-200 dark:border-slate-700 p-4 bg-slate-50 dark:bg-slate-800 relative" style={{ borderLeftWidth: '3px', borderLeftColor: getAccentColor(cityIdx) }}>
+              <div className="font-semibold text-sm text-slate-900 dark:text-white mb-1 flex items-center gap-1">
+                {city.name}
+                {city.timezone === browserTz && <Home size={14} className="text-slate-500" />}
+                <span className="font-normal text-xs text-slate-600 dark:text-slate-400 ml-2">
+                  {getTimezoneAbbr(city.timezone)}
+                </span>
+              </div>
+              <div className="text-xs text-slate-500 dark:text-slate-400">{city.code}</div>
+              <div className="text-xl font-mono font-semibold text-slate-900 dark:text-white mt-3">
+                {partsAt(city.timezone, currentTime, !use24Hour).hour}:{partsAt(city.timezone, currentTime, !use24Hour).minute}
+                <span className="text-xs text-slate-500 dark:text-slate-400 font-normal ml-2">
+                  {partsAt(city.timezone, currentTime, !use24Hour).weekday}, {partsAt(city.timezone, currentTime, !use24Hour).month} {partsAt(city.timezone, currentTime, !use24Hour).day}
+                </span>
+              </div>
+              {city.timezone !== browserTz && (
+                <button
+                  onClick={() => handleRemoveCity(cityIdx)}
+                  className="absolute top-2 right-2 p-1 text-slate-400 hover:text-red-500 hover:bg-slate-200 dark:hover:bg-slate-700 rounded"
+                >
+                  ×
+                </button>
+              )}
+            </div>
+
+            {/* Timeline */}
+            <div
+              ref={(el) => (scrollRefs.current[cityIdx] = el)}
+              className="flex-1 overflow-x-auto overflow-y-hidden scrollbar-hide relative"
+              onScroll={(e) => handleScroll(e, cityIdx)}
+            >
+              <div style={{ display: 'flex', position: 'relative', width: `${timeline.length * TILE_W}px`, height: '100%' }}>
+                {timeline.map((t, i) => {
+                  const p = partsAt(city.timezone, t, !use24Hour);
+                  const hourLabel = !use24Hour ? p.hour.replace(/^0/, '') : p.hour;
+                  const isSelected = i >= Math.floor(selStart) && i < Math.ceil(selEnd);
+                  const isDayStart = i > 0 && p.day !== partsAt(city.timezone, timeline[i-1], !use24Hour).day;
+
+                  return (
+                    <button
+                      key={i}
+                      onMouseDown={() => {
+                        dragStart.current = i;
+                        setDragging(true);
+                        setSelStart(i);
+                        setSelEnd(i + 1);
+                      }}
+                      onMouseEnter={() => {
+                        if (dragging && dragStart.current !== null) {
+                          const lo = Math.min(dragStart.current, i);
+                          const hi = Math.max(dragStart.current, i) + 1;
+                          setSelStart(lo);
+                          setSelEnd(hi);
+                        }
+                      }}
+                      className={`flex-shrink-0 w-12 h-16 flex flex-col items-center justify-center text-xs font-mono border-r dark:border-slate-700 position-relative cursor-pointer transition-colors ${
+                        isSelected
+                          ? 'bg-blue-50 dark:bg-blue-900/20 border-t-2 border-b-2 border-blue-500'
+                          : 'bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700'
+                      } ${isDayStart ? 'border-l-2 border-l-dashed border-l-slate-400' : ''}`}
+                    >
+                      <div>{hourLabel}{p.minute !== '00' ? ':' + p.minute : ''}</div>
+                      {!use24Hour && <div className="text-[9px] text-slate-500 dark:text-slate-400 mt-1">{dayPeriod(t, city.timezone)}</div>}
+                    </button>
+                  );
+                })}
+
+                {/* Date labels under 12 AM hours */}
+                {timeline.map((t, i) => {
+                  const p = partsAt(city.timezone, t, false);
+                  const hour = parseInt(p.hour);
+                  if (hour === 0) {
+                    return (
+                      <div
+                        key={`label-${i}`}
+                        className="absolute -bottom-5 text-xs font-medium text-slate-900 dark:text-slate-300 pointer-events-none"
+                        style={{ left: `${i * TILE_W + TILE_W / 2}px`, transform: 'translateX(-50%)' }}
+                      >
+                        {p.month} {p.day}
+                      </div>
+                    );
+                  }
+                  return null;
+                })}
+              </div>
+            </div>
+
           </div>
-          <div>
-            <p className="font-medium text-slate-700 dark:text-slate-300 mb-1">Home Timezone</p>
-            <p>The top city is your home timezone. Move cities up/down to reorganize them. Your home timezone's hour determines all other times.</p>
-          </div>
-          <div>
-            <p className="font-medium text-slate-700 dark:text-slate-300 mb-1">Add Cities</p>
-            <p>Use the search field to add cities. Search from 100+ major world cities by name, country, or timezone.</p>
-          </div>
-          <div>
-            <p className="font-medium text-slate-700 dark:text-slate-300 mb-1">Reorder</p>
-            <p>Use the up/down arrows to move cities in the list. The first city becomes your home timezone.</p>
-          </div>
+        ))}
+      </div>
+
+      {/* Selection Summary */}
+      <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-4">
+        <div className="text-xs font-mono text-slate-500 uppercase mb-3">Selected window</div>
+        <div className="space-y-2 mb-4">
+          {cities.map(city => {
+            const lo = Math.min(selStart, selEnd);
+            const hi = Math.max(selStart, selEnd);
+            const startT = timeline[Math.floor(lo)];
+            const endMs = timeline[0].getTime() + hi * 3600000;
+            const endT = new Date(endMs);
+            const sp = partsAt(city.timezone, startT, !use24Hour);
+            const ep = partsAt(city.timezone, endT, !use24Hour);
+            const ampmS = !use24Hour ? ' ' + dayPeriod(startT, city.timezone) : '';
+            const ampmE = !use24Hour ? ' ' + dayPeriod(endT, city.timezone) : '';
+
+            return (
+              <div key={city.timezone} className="text-sm text-slate-700 dark:text-slate-300">
+                <strong className="text-slate-900 dark:text-white">{city.name}:</strong>{' '}
+                <span className="font-mono text-amber-600 dark:text-amber-400">
+                  {sp.hour}:{sp.minute}{ampmS}
+                </span>{' '}
+                –{' '}
+                <span className="font-mono text-amber-600 dark:text-amber-400">
+                  {ep.hour}:{ep.minute}{ampmE}
+                </span>{' '}
+                <span className="text-slate-500">({sp.weekday} {sp.month} {sp.day})</span>
+              </div>
+            );
+          })}
         </div>
+        <div className="flex gap-2">
+          <button
+            onClick={handleCopyTimes}
+            className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 flex items-center gap-2"
+          >
+            <Copy size={14} />
+            Copy times
+          </button>
+          <button
+            onClick={handleGoogleCalendar}
+            className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700"
+          >
+            Add to Google Calendar
+          </button>
+        </div>
+      </div>
+
+      {/* Hint */}
+      <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-4 text-sm text-slate-600 dark:text-slate-400">
+        <p>Drag across any row to choose a meeting time slot — every row highlights the same instant. Scroll any row to move all of them together.</p>
       </div>
     </div>
   );
 }
+
+export default TimeZoneCalculator;

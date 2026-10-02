@@ -70,7 +70,7 @@ export default function CategoryHub() {
   const { category } = useParams();
   const [query, setQuery] = useState("");
   const meta = categoryMeta[category];
-  const allTools = calculatorRegistry.filter((c) => c.category === category);
+  const allTools = calculatorRegistry.filter((c) => c.category === category && !c.hidden);
 
   if (!meta) {
     return (

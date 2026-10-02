@@ -2,3 +2,8 @@ node_modules
 dist
 .env
 .env.local
+
+# Test files and screenshots
+*.png
+*.mjs
+test_*.js

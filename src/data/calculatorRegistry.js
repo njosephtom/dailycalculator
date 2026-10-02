@@ -157,15 +157,6 @@ export const calculatorRegistry = [
 
   // ─── MISC ─────────────────────────────────────────────────────────────────
   {
-    id: "cubic-yards-calculator",
-    name: "Cubic Yards Calculator",
-    path: "/misc/cubic-yards-calculator",
-    category: "misc",
-    implemented: true,
-    description: "Calculate volume in cubic yards for concrete, topsoil, mulch, gravel and other materials.",
-    tags: ["cubic yards", "volume", "concrete", "mulch", "topsoil", "gravel", "construction"],
-  },
-  {
     id: "age-calculator",
     name: "Age Calculator",
     path: "/time/age-calculator",
@@ -211,6 +202,7 @@ export const calculatorRegistry = [
     path: "/health/bmi-bmr",
     category: "health",
     implemented: true,
+    hidden: true,
     description: "Calculate your Body Mass Index and Basal Metabolic Rate for daily caloric needs.",
     tags: ["bmi", "bmr", "health", "weight", "fitness", "calories", "body mass", "diet"],
   },
@@ -279,6 +271,15 @@ export const calculatorRegistry = [
   },
 
   // ─── CONVERT ──────────────────────────────────────────────────────────────
+  {
+    id: "cubic-yards-calculator",
+    name: "Cubic Yards Calculator",
+    path: "/misc/cubic-yards-calculator",
+    category: "convert",
+    implemented: true,
+    description: "Calculate volume in cubic yards for concrete, topsoil, mulch, gravel and other materials.",
+    tags: ["cubic yards", "volume", "concrete", "mulch", "topsoil", "gravel", "construction"],
+  },
   {
     id: "length-weight",
     name: "Length & Weight Converter",

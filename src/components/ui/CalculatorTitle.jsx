@@ -16,7 +16,7 @@ export default function CalculatorTitle({ calculatorId, title, description }) {
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1">
           <h1 className="text-xl font-bold text-slate-800 dark:text-white">{title}</h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">{description}</p>
+          <p className="hidden md:block text-sm text-slate-500 dark:text-slate-400 mt-1">{description}</p>
         </div>
         <button
           onClick={handleClick}
