@@ -1,3 +1,18 @@
 User-agent: *
 Allow: /
-Sitemap: https://dailycalculator.vercel.app/sitemap.xml
+
+# Allow AI crawlers explicitly
+User-agent: GPTBot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+Sitemap: https://www.converthub.wiki/sitemap.xml
+Sitemap: https://converthub.wiki/sitemap.xml

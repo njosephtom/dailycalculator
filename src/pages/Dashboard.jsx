@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { doc, getDoc, setDoc, collection, getDocs } from "firebase/firestore";
+import { doc, getDoc, setDoc, collection, getDocs, query, orderBy, limit } from "firebase/firestore";
 import { db } from "../utils/firebase";
 import { useNavigate } from "react-router-dom";
 import { Heart } from "lucide-react";
 import { recordUsage } from "../utils/usageTracker";
+import PageSEO from "../components/ui/PageSEO";
 
 const CALCULATORS = [
   { id: "compound-interest", name: "Compound Interest", category: "finance" },
@@ -36,9 +37,10 @@ export default function Dashboard({ user, onSignOut }) {
         setFavorites(docSnap.data().favorites || []);
       }
 
-      // Load usage data
+      // Load usage data - limit to top 20 for performance, only need 9 for display
       const usageCol = collection(db, "users", user.uid, "usage");
-      const usageSnap = await getDocs(usageCol);
+      const usageQuery = query(usageCol, orderBy("count", "desc"), limit(20));
+      const usageSnap = await getDocs(usageQuery);
       const usageMap = {};
       usageSnap.forEach((doc) => {
         usageMap[doc.id] = doc.data().count || 0;
@@ -72,7 +74,13 @@ export default function Dashboard({ user, onSignOut }) {
   const sortedByUsage = [...CALCULATORS].sort((a, b) => (usage[b.id] || 0) - (usage[a.id] || 0));
 
   return (
-    <div className="space-y-6">
+    <>
+      <PageSEO
+        title="My Dashboard"
+        description="View your favorite calculators and most-used tools."
+        path="/dashboard"
+      />
+      <div className="space-y-6">
       {/* Header */}
       <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6">
         <div className="flex justify-between items-center gap-4 flex-wrap">
@@ -142,5 +150,6 @@ export default function Dashboard({ user, onSignOut }) {
         </div>
       </div>
     </div>
+    </>
   );
 }

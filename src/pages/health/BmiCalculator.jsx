@@ -3,6 +3,7 @@ import React, { useState, useMemo } from "react";
 import InputField from "../../components/ui/InputField";
 import { calculateBMI, bmiCategory } from "../../utils/bmiCalculations";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import PageSEO from "../../components/ui/PageSEO";
 
 const BMI_CLASSES = [
   { label:"Severely Underweight", range:"< 16",    color:"blue"  },
@@ -65,7 +66,23 @@ export default function BmiCalculator() {
   const minLbs = minKg * 2.20462;
   const maxLbs = maxKg * 2.20462;
 
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "BMI Calculator",
+    "description": "Free BMI calculator: Calculate your Body Mass Index and see where you fall in the standard health classification.",
+    "url": "https://www.converthub.wiki/health/bmi-calculator",
+    "applicationCategory": "HealthApplication"
+  };
+
   return (
+    <>
+      <PageSEO
+        title="BMI Calculator"
+        description="Free BMI calculator: Calculate your Body Mass Index and see health classifications."
+        path="/health/bmi-calculator"
+        schema={schema}
+      />
     <div className="space-y-4">
       {/* Two-column grid */}
       <div className="grid grid-cols-1 xl:grid-cols-[1fr_minmax(340px,420px)] gap-4 items-start">
@@ -194,5 +211,6 @@ Imperial: BMI = 703 × Weight (lbs) / Height (in)²`}
         {FAQS.map((f, i) => <FaqItem key={i} q={f.q} a={f.a} />)}
       </div>
     </div>
+    </>
   );
 }

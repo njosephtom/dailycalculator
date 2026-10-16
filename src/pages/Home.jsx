@@ -2,13 +2,34 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { DollarSign, Calculator, ChefHat, Heart, ArrowLeftRight } from "lucide-react";
 import { calculatorRegistry, categoryMeta } from "../data/calculatorRegistry";
+import PageSEO from "../components/ui/PageSEO";
 
 const ICON_MAP = { DollarSign, Calculator, ChefHat, Heart, ArrowLeftRight };
 
 export default function Home() {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "CalcVault",
+    "description": "Free online calculators for finance, health, math, cooking, tech, and everyday tools.",
+    "url": "https://www.converthub.wiki",
+    "applicationCategory": ["Productivity", "Education"],
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  };
   return (
-    <div className="space-y-6">
-      {/* Hero */}
+    <>
+      <PageSEO
+        title="Free Online Calculators"
+        description="41+ free calculators for finance, health, math, cooking, tech, and unit conversions."
+        path="/"
+        schema={schema}
+      />
+      <div className="space-y-6">
+        {/* Hero */}
       <div className="bg-gradient-to-br from-indigo-600 to-indigo-700 rounded-2xl p-8 text-white">
         <h1 className="text-2xl md:text-3xl font-bold mb-2">Universal Calculator Suite</h1>
         <p className="hidden sm:block text-indigo-200 text-sm leading-relaxed max-w-lg">
@@ -57,6 +78,7 @@ export default function Home() {
           );
         })}
       </div>
-    </div>
+      </div>
+    </>
   );
 }
