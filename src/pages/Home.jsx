@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { DollarSign, Calculator, ChefHat, Heart, ArrowLeftRight } from "lucide-react";
 import { calculatorRegistry, categoryMeta } from "../data/calculatorRegistry";
 import PageSEO from "../components/ui/PageSEO";
+import AdSenseUnit from "../components/ads/AdSenseUnit";
 
 const ICON_MAP = { DollarSign, Calculator, ChefHat, Heart, ArrowLeftRight };
 
@@ -77,6 +78,11 @@ export default function Home() {
             </div>
           );
         })}
+      </div>
+
+      {/* AdSense Rectangle Ad */}
+      <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4 flex justify-center">
+        <AdSenseUnit slot="rectangle" />
       </div>
       </div>
     </>

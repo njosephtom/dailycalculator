@@ -8,6 +8,7 @@ import Header from "./Header";
 import Sidebar from "./Sidebar";
 import Footer from "./Footer";
 import PageSEO from "../ui/PageSEO";
+import AdSenseUnit from "../ads/AdSenseUnit";
 import { calculatorRegistry, categoryMeta } from "../../data/calculatorRegistry";
 import { useTrackUsage } from "../../hooks/useTrackUsage";
 
@@ -54,6 +55,11 @@ export default function Layout({ user, onSignIn, onSignOut }) {
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 transition-colors duration-200 flex flex-col">
       <PageSEO title={seo.title} description={seo.description} path={seo.path} />
       <Header user={user} onSignIn={onSignIn} onSignOut={onSignOut} />
+
+      {/* Top AdSense Banner */}
+      <div className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 flex justify-center py-2 overflow-x-auto">
+        <AdSenseUnit slot="leaderboard" className="min-w-max" />
+      </div>
 
       <div className="flex flex-1 w-full">
 
@@ -141,6 +147,11 @@ export default function Layout({ user, onSignIn, onSignOut }) {
         <main className="flex-1 min-w-0 px-4 sm:px-6 py-6 max-w-7xl mx-auto">
           <Outlet />
         </main>
+      </div>
+
+      {/* Bottom AdSense Banner */}
+      <div className="bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 flex justify-center py-2 overflow-x-auto">
+        <AdSenseUnit slot="leaderboard" className="min-w-max" />
       </div>
 
       <Footer />
