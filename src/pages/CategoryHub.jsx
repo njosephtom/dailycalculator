@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { calculatorRegistry, categoryMeta } from "../data/calculatorRegistry";
 import { ArrowRight, CheckCircle, Clock, Search, X, Heart } from "lucide-react";
 import { useFavorites } from "../context/FavoritesContext";
+import AdGrid from "../components/ads/AdGrid";
 
 function groupBySubcategory(tools) {
   const map = new Map();
@@ -182,6 +183,9 @@ export default function CategoryHub() {
           ))}
         </div>
       )}
+
+      {/* AdSense - Below Content */}
+      <AdGrid position="below-content" />
     </div>
   );
 }

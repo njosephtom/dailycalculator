@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Heart } from "lucide-react";
 import { recordUsage } from "../utils/usageTracker";
 import PageSEO from "../components/ui/PageSEO";
+import AdGrid from "../components/ads/AdGrid";
 
 const CALCULATORS = [
   { id: "compound-interest", name: "Compound Interest", category: "finance" },
@@ -149,6 +150,9 @@ export default function Dashboard({ user, onSignOut }) {
           ))}
         </div>
       </div>
+
+      {/* AdSense - Below Content */}
+      <AdGrid position="below-content" />
     </div>
     </>
   );

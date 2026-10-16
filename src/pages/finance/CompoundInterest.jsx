@@ -5,6 +5,7 @@ import BreakdownCard from "../../components/ui/BreakdownCard";
 import CalculatorTitle from "../../components/ui/CalculatorTitle";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import katex from "katex";
+import AdGrid from "../../components/ads/AdGrid";
 
 const CURRENCIES = { USD:"$", EUR:"€", GBP:"£", INR:"₹", JPY:"¥" };
 const CUR_OPTS   = Object.entries(CURRENCIES).map(([k,v])=>({ value:k, label:`${v} ${k}` }));
@@ -306,6 +307,9 @@ export default function CompoundInterest() {
 
           {/* Formula card */}
           <FormulaCard />
+
+          {/* AdSense Sidebar Ad */}
+          <AdGrid position="sidebar" />
         </div>
       </div>
 

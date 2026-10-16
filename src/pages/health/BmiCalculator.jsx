@@ -4,6 +4,7 @@ import InputField from "../../components/ui/InputField";
 import { calculateBMI, bmiCategory } from "../../utils/bmiCalculations";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import PageSEO from "../../components/ui/PageSEO";
+import AdGrid from "../../components/ads/AdGrid";
 
 const BMI_CLASSES = [
   { label:"Severely Underweight", range:"< 16",    color:"blue"  },
@@ -202,6 +203,9 @@ export default function BmiCalculator() {
 Imperial: BMI = 703 × Weight (lbs) / Height (in)²`}
             </pre>
           </div>
+
+          {/* AdSense Sidebar Ad */}
+          <AdGrid position="sidebar" />
         </div>
       </div>
 
