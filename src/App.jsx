@@ -62,6 +62,11 @@ import LengthWeight         from "./pages/convert/LengthWeight";
 import WeightConverter      from "./pages/convert/WeightConverter";
 import LengthConverter      from "./pages/convert/LengthConverter";
 
+// Legal Pages
+import PrivacyPolicy        from "./pages/legal/PrivacyPolicy";
+import TermsOfUse           from "./pages/legal/TermsOfUse";
+import Disclaimer           from "./pages/legal/Disclaimer";
+
 export default function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -163,6 +168,11 @@ export default function App() {
             <Route path="convert/length-weight"              element={<LengthWeight />} />
             <Route path="convert/weight-converter"           element={<WeightConverter />} />
             <Route path="convert/length-converter"           element={<LengthConverter />} />
+
+            {/* ── Legal Pages ── */}
+            <Route path="privacy-policy"                      element={<PrivacyPolicy />} />
+            <Route path="terms-of-use"                        element={<TermsOfUse />} />
+            <Route path="disclaimer"                          element={<Disclaimer />} />
 
             {/* Catch-all */}
             <Route path="*" element={<ComingSoon />} />
