@@ -5,7 +5,7 @@ export default function TermsOfUse() {
     "@context": "https://schema.org",
     "@type": "WebPage",
     "name": "Terms of Use",
-    "description": "CalcVault terms of use and service agreement",
+    "description": "ConvertHub terms of use and service agreement",
     "url": "https://www.converthub.wiki/terms-of-use"
   };
 
@@ -13,7 +13,7 @@ export default function TermsOfUse() {
     <>
       <PageSEO
         title="Terms of Use"
-        description="CalcVault terms of use: Legal agreement for using our calculator services."
+        description="ConvertHub terms of use: Legal agreement for using our calculator services."
         path="/terms-of-use"
         schema={schema}
       />
@@ -30,7 +30,7 @@ export default function TermsOfUse() {
             <section>
               <h2 className="text-xl font-bold text-slate-800 dark:text-white mt-8 mb-4">1. Acceptance of Terms</h2>
               <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
-                By accessing and using CalcVault (www.converthub.wiki), you agree to be bound by these Terms of Use. If you do not agree to any part of these terms, you may not use the Service. We reserve the right to modify these Terms of Use at any time. Your continued use of the Service following such modifications constitutes your acceptance of the updated Terms.
+                By accessing and using ConvertHub (www.converthub.wiki), you agree to be bound by these Terms of Use. If you do not agree to any part of these terms, you may not use the Service. We reserve the right to modify these Terms of Use at any time. Your continued use of the Service following such modifications constitutes your acceptance of the updated Terms.
               </p>
             </section>
 
@@ -38,7 +38,7 @@ export default function TermsOfUse() {
             <section>
               <h2 className="text-xl font-bold text-slate-800 dark:text-white mt-8 mb-4">2. Use License</h2>
               <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
-                We grant you a limited, non-exclusive, non-transferable license to access and use CalcVault for personal, non-commercial purposes. This license does not include:
+                We grant you a limited, non-exclusive, non-transferable license to access and use ConvertHub for personal, non-commercial purposes. This license does not include:
               </p>
               <ul className="list-disc pl-6 space-y-2 text-slate-700 dark:text-slate-300 mt-3">
                 <li>Copying or reproducing any content without permission</li>
@@ -88,7 +88,7 @@ export default function TermsOfUse() {
             <section>
               <h2 className="text-xl font-bold text-slate-800 dark:text-white mt-8 mb-4">5. Intellectual Property Rights</h2>
               <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
-                CalcVault and all content, features, and functionality (including but not limited to all information, software, text, displays, images, video, and audio) are owned by CalcVault, its licensors, or other providers of such material and are protected by copyright and other intellectual property laws.
+                ConvertHub and all content, features, and functionality (including but not limited to all information, software, text, displays, images, video, and audio) are owned by ConvertHub, its licensors, or other providers of such material and are protected by copyright and other intellectual property laws.
               </p>
               <p className="text-slate-700 dark:text-slate-300 leading-relaxed mt-3">
                 <strong>Personal Use Only:</strong> You may print or download calculator results for personal use only. Commercial reproduction without permission is strictly prohibited.
@@ -120,7 +120,7 @@ export default function TermsOfUse() {
             <section>
               <h2 className="text-xl font-bold text-slate-800 dark:text-white mt-8 mb-4">7. Limitation of Liability</h2>
               <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
-                TO THE MAXIMUM EXTENT PERMITTED BY LAW, CALCVAULT SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING LOST PROFITS, LOSS OF DATA, OR LOSS OF USE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+                TO THE MAXIMUM EXTENT PERMITTED BY LAW, CONVERTHUB SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING LOST PROFITS, LOSS OF DATA, OR LOSS OF USE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
               </p>
               <p className="text-slate-700 dark:text-slate-300 leading-relaxed mt-3">
                 Because the Service is free, our total liability for any claim arising from the Service shall not exceed $100 USD.
@@ -131,7 +131,7 @@ export default function TermsOfUse() {
             <section>
               <h2 className="text-xl font-bold text-slate-800 dark:text-white mt-8 mb-4">8. Indemnification</h2>
               <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
-                You agree to indemnify and hold harmless CalcVault and its officers, directors, employees, and agents from any claims, damages, losses, or expenses (including legal fees) arising from:
+                You agree to indemnify and hold harmless ConvertHub and its officers, directors, employees, and agents from any claims, damages, losses, or expenses (including legal fees) arising from:
               </p>
               <ul className="list-disc pl-6 space-y-2 text-slate-700 dark:text-slate-300 mt-3">
                 <li>Your use of the Service</li>
@@ -178,7 +178,7 @@ export default function TermsOfUse() {
             <section>
               <h2 className="text-xl font-bold text-slate-800 dark:text-white mt-8 mb-4">12. Entire Agreement</h2>
               <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
-                These Terms of Use, together with our Privacy Policy and Disclaimer, constitute the entire agreement between you and CalcVault regarding the Service and supersede all prior agreements.
+                These Terms of Use, together with our Privacy Policy and Disclaimer, constitute the entire agreement between you and ConvertHub regarding the Service and supersede all prior agreements.
               </p>
             </section>
 

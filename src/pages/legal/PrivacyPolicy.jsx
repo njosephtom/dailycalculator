@@ -5,7 +5,7 @@ export default function PrivacyPolicy() {
     "@context": "https://schema.org",
     "@type": "WebPage",
     "name": "Privacy Policy",
-    "description": "CalcVault privacy policy and data protection information",
+    "description": "ConvertHub privacy policy and data protection information",
     "url": "https://www.converthub.wiki/privacy-policy"
   };
 
@@ -13,7 +13,7 @@ export default function PrivacyPolicy() {
     <>
       <PageSEO
         title="Privacy Policy"
-        description="CalcVault privacy policy: How we collect, use, and protect your data."
+        description="ConvertHub privacy policy: How we collect, use, and protect your data."
         path="/privacy-policy"
         schema={schema}
       />
@@ -30,10 +30,10 @@ export default function PrivacyPolicy() {
             <section>
               <h2 className="text-xl font-bold text-slate-800 dark:text-white mt-8 mb-4">1. Introduction</h2>
               <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
-                CalcVault ("we," "us," "our," or "Company") operates the www.converthub.wiki website (the "Service"). This Privacy Policy explains our practices regarding the collection, use, and protection of your information when you use our Service.
+                ConvertHub ("we," "us," "our," or "Company") operates the www.converthub.wiki website (the "Service"). This Privacy Policy explains our practices regarding the collection, use, and protection of your information when you use our Service.
               </p>
               <p className="text-slate-700 dark:text-slate-300 leading-relaxed mt-3">
-                Please read this Privacy Policy carefully. By accessing or using CalcVault, you acknowledge that you have read, understood, and agree to be bound by all the terms of this Privacy Policy.
+                Please read this Privacy Policy carefully. By accessing or using ConvertHub, you acknowledge that you have read, understood, and agree to be bound by all the terms of this Privacy Policy.
               </p>
             </section>
 
@@ -152,7 +152,7 @@ export default function PrivacyPolicy() {
             <section>
               <h2 className="text-xl font-bold text-slate-800 dark:text-white mt-8 mb-4">9. Children's Privacy</h2>
               <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
-                CalcVault is not directed at children under 13. We do not knowingly collect personal information from children under 13. If we become aware that a child under 13 has provided us with personal information, we will delete such information promptly.
+                ConvertHub is not directed at children under 13. We do not knowingly collect personal information from children under 13. If we become aware that a child under 13 has provided us with personal information, we will delete such information promptly.
               </p>
             </section>
 

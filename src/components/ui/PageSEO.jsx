@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet-async";
 
-const SITE_NAME = "CalcVault";
+const SITE_NAME = "ConvertHub";
 const BASE_URL = "https://www.converthub.wiki";
 
 export default function PageSEO({ title, description, path, schema }) {

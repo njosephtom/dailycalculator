@@ -5,7 +5,7 @@ export default function Disclaimer() {
     "@context": "https://schema.org",
     "@type": "WebPage",
     "name": "Disclaimer",
-    "description": "CalcVault disclaimer and limitation of liability statement",
+    "description": "ConvertHub disclaimer and limitation of liability statement",
     "url": "https://www.converthub.wiki/disclaimer"
   };
 
@@ -13,7 +13,7 @@ export default function Disclaimer() {
     <>
       <PageSEO
         title="Disclaimer"
-        description="CalcVault disclaimer: Important limitations and liability information for calculator results."
+        description="ConvertHub disclaimer: Important limitations and liability information for calculator results."
         path="/disclaimer"
         schema={schema}
       />
@@ -21,7 +21,7 @@ export default function Disclaimer() {
         <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-8 space-y-6">
           <div className="bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-400 p-4 mb-6">
             <p className="text-yellow-800 dark:text-yellow-200 font-semibold">
-              ⚠️ Important: Please read this disclaimer carefully before using CalcVault calculators.
+              ⚠️ Important: Please read this disclaimer carefully before using ConvertHub calculators.
             </p>
           </div>
 
@@ -36,7 +36,7 @@ export default function Disclaimer() {
             <section>
               <h2 className="text-xl font-bold text-slate-800 dark:text-white mt-8 mb-4">1. General Disclaimer</h2>
               <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
-                CalcVault ("Service") is provided "as is" without warranties of any kind. We make no representations or warranties regarding the accuracy, completeness, reliability, or timeliness of any calculator results, content, or services provided through this website.
+                ConvertHub ("Service") is provided "as is" without warranties of any kind. We make no representations or warranties regarding the accuracy, completeness, reliability, or timeliness of any calculator results, content, or services provided through this website.
               </p>
               <p className="text-slate-700 dark:text-slate-300 leading-relaxed mt-3">
                 <strong>Use at Your Own Risk:</strong> Your use of the Service and reliance on any calculator results is entirely at your own risk. We shall not be liable for any damages or losses resulting from the use of or inability to use the Service.
@@ -53,7 +53,7 @@ export default function Disclaimer() {
               </div>
 
               <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
-                <strong>CalcVault does not provide financial, investment, or professional advice.</strong> Our financial calculators (Compound Interest, Loan Calculator, SIP Calculator, etc.) are educational tools only. Results are estimates based on assumptions you provide.
+                <strong>ConvertHub does not provide financial, investment, or professional advice.</strong> Our financial calculators (Compound Interest, Loan Calculator, SIP Calculator, etc.) are educational tools only. Results are estimates based on assumptions you provide.
               </p>
 
               <h3 className="text-lg font-semibold text-slate-800 dark:text-white mt-6 mb-3">Important Limitations:</h3>
@@ -85,7 +85,7 @@ export default function Disclaimer() {
               </div>
 
               <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
-                <strong>CalcVault does not provide medical, health, or fitness advice.</strong> Our health calculators (BMI, BMR, Body Fat, Calorie Deficit, TDEE, Water Intake, Pregnancy, etc.) are educational tools based on general formulas. Results are not substitutes for professional medical advice.
+                <strong>ConvertHub does not provide medical, health, or fitness advice.</strong> Our health calculators (BMI, BMR, Body Fat, Calorie Deficit, TDEE, Water Intake, Pregnancy, etc.) are educational tools based on general formulas. Results are not substitutes for professional medical advice.
               </p>
 
               <h3 className="text-lg font-semibold text-slate-800 dark:text-white mt-6 mb-3">Important Limitations:</h3>
@@ -159,7 +159,7 @@ export default function Disclaimer() {
             <section>
               <h2 className="text-xl font-bold text-slate-800 dark:text-white mt-8 mb-4">7. Service Availability</h2>
               <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
-                We do not guarantee continuous, uninterrupted access to the Service. CalcVault may be unavailable due to:
+                We do not guarantee continuous, uninterrupted access to the Service. ConvertHub may be unavailable due to:
               </p>
               <ul className="list-disc pl-6 space-y-2 text-slate-700 dark:text-slate-300 mt-3">
                 <li>Scheduled maintenance</li>
@@ -174,7 +174,7 @@ export default function Disclaimer() {
             <section>
               <h2 className="text-xl font-bold text-slate-800 dark:text-white mt-8 mb-4">8. Limitation of Liability</h2>
               <p className="text-slate-700 dark:text-slate-300 leading-relaxed font-semibold">
-                TO THE MAXIMUM EXTENT PERMITTED BY LAW, CALCVAULT SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING:
+                TO THE MAXIMUM EXTENT PERMITTED BY LAW, CONVERTHUB SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING:
               </p>
               <ul className="list-disc pl-6 space-y-2 text-slate-700 dark:text-slate-300 mt-3">
                 <li>Loss of profits or revenue</li>
@@ -201,14 +201,14 @@ export default function Disclaimer() {
               <h2 className="text-xl font-bold text-slate-800 dark:text-white mt-8 mb-4">10. Your Acknowledgment</h2>
               <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 border border-blue-200 dark:border-blue-800 mt-4">
                 <p className="text-blue-900 dark:text-blue-200">
-                  <strong>By using CalcVault, you acknowledge that:</strong>
+                  <strong>By using ConvertHub, you acknowledge that:</strong>
                 </p>
                 <ul className="list-disc pl-6 space-y-2 text-blue-900 dark:text-blue-200 mt-2">
                   <li>You have read and understood this Disclaimer</li>
                   <li>You understand calculator results are estimates only</li>
                   <li>You will seek professional advice for important decisions</li>
                   <li>You assume all risk from using the Service</li>
-                  <li>You release CalcVault from all liability</li>
+                  <li>You release ConvertHub from all liability</li>
                 </ul>
               </div>
             </section>

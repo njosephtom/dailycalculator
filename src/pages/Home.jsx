@@ -11,7 +11,7 @@ export default function Home() {
   const schema = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    "name": "CalcVault",
+    "name": "ConvertHub",
     "description": "Free online calculators for finance, health, math, cooking, tech, and everyday tools.",
     "url": "https://www.converthub.wiki",
     "applicationCategory": ["Productivity", "Education"],
