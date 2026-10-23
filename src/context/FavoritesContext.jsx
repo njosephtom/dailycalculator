@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, onSnapshot, setDoc } from "firebase/firestore";
 import { db } from "../utils/firebase";
 
 const FavoritesContext = createContext(null);
@@ -14,22 +14,19 @@ export function FavoritesProvider({ children, user }) {
       setLoading(false);
       return;
     }
-    loadFavorites();
-  }, [user]);
-
-  const loadFavorites = async () => {
-    try {
-      const docRef = doc(db, "users", user.uid);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        setFavorites(docSnap.data().favorites || []);
+    // snapshot fires from the local cache first, then again when the server answers
+    return onSnapshot(
+      doc(db, "users", user.uid),
+      (snap) => {
+        setFavorites(snap.data()?.favorites || []);
+        setLoading(false);
+      },
+      (err) => {
+        console.error("Error loading favorites:", err);
+        setLoading(false);
       }
-    } catch (err) {
-      console.error("Error loading favorites:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+    );
+  }, [user]);
 
   const toggleFavorite = async (calcId) => {
     const newFavs = favorites.includes(calcId)
