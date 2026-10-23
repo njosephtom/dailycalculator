@@ -1,74 +1,55 @@
 import { useState, useEffect } from "react";
-import { doc, getDoc, setDoc, collection, getDocs, query, orderBy, limit } from "firebase/firestore";
+import { collection, getDocs, query, orderBy, limit } from "firebase/firestore";
 import { db } from "../utils/firebase";
 import { useNavigate } from "react-router-dom";
 import { Heart } from "lucide-react";
-import { recordUsage } from "../utils/usageTracker";
 import PageSEO from "../components/ui/PageSEO";
 import AdGrid from "../components/ads/AdGrid";
+import { useFavorites } from "../context/FavoritesContext";
 
+// ids match calculatorRegistry ids (usage docs are keyed by them)
 const CALCULATORS = [
-  { id: "compound-interest", name: "Compound Interest", category: "finance" },
-  { id: "simple-interest", name: "Simple Interest", category: "finance" },
-  { id: "savings-calculator", name: "Savings", category: "finance" },
-  { id: "loan-calculator", name: "Loan", category: "finance" },
-  { id: "bmi-calculator", name: "BMI", category: "health" },
-  { id: "age-calculator", name: "Age", category: "misc" },
-  { id: "date-calculator", name: "Date", category: "misc" },
-  { id: "timezone-calculator", name: "Timezone", category: "time" },
-  { id: "percentage-calculator", name: "Percentage", category: "math" },
+  { id: "compound-interest", name: "Compound Interest", path: "/finance/compound-interest" },
+  { id: "simple-interest-calculator", name: "Simple Interest", path: "/finance/simple-interest-calculator" },
+  { id: "savings-calculator", name: "Savings", path: "/finance/savings-calculator" },
+  { id: "loan-calculator", name: "Loan", path: "/finance/loan-calculator" },
+  { id: "bmi-calculator", name: "BMI", path: "/health/bmi-calculator" },
+  { id: "age-calculator", name: "Age", path: "/time/age-calculator" },
+  { id: "date-calculator", name: "Date", path: "/time/date-calculator" },
+  { id: "time-zone-calculator", name: "Timezone", path: "/time/time-zone-calculator" },
+  { id: "percentage-calculator", name: "Percentage", path: "/math/percentage-calculator" },
 ];
 
 export default function Dashboard({ user, onSignOut }) {
-  const [favorites, setFavorites] = useState([]);
+  // favorites come from FavoritesProvider (already loaded in App) - no second user-doc read
+  const { favorites, loading: favoritesLoading, toggleFavorite } = useFavorites();
   const [usage, setUsage] = useState({});
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!user) return;
-    loadFavoritesAndUsage();
+    const loadUsage = async () => {
+      try {
+        // top 20 by count; only 9 are displayed
+        const usageSnap = await getDocs(
+          query(collection(db, "users", user.uid, "usage"), orderBy("count", "desc"), limit(20))
+        );
+        const usageMap = {};
+        usageSnap.forEach((doc) => {
+          usageMap[doc.id] = doc.data().count || 0;
+        });
+        setUsage(usageMap);
+      } catch (err) {
+        console.error("Error loading usage:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadUsage();
   }, [user]);
 
-  const loadFavoritesAndUsage = async () => {
-    try {
-      const docRef = doc(db, "users", user.uid);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        setFavorites(docSnap.data().favorites || []);
-      }
-
-      // Load usage data - limit to top 20 for performance, only need 9 for display
-      const usageCol = collection(db, "users", user.uid, "usage");
-      const usageQuery = query(usageCol, orderBy("count", "desc"), limit(20));
-      const usageSnap = await getDocs(usageQuery);
-      const usageMap = {};
-      usageSnap.forEach((doc) => {
-        usageMap[doc.id] = doc.data().count || 0;
-      });
-      setUsage(usageMap);
-    } catch (err) {
-      console.error("Error loading data:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const toggleFavorite = async (calcId) => {
-    const newFavs = favorites.includes(calcId)
-      ? favorites.filter((id) => id !== calcId)
-      : [...favorites, calcId];
-    setFavorites(newFavs);
-
-    try {
-      const docRef = doc(db, "users", user.uid);
-      await setDoc(docRef, { favorites: newFavs }, { merge: true });
-    } catch (err) {
-      console.error("Error saving favorites:", err);
-    }
-  };
-
-  if (loading) return <div className="text-center py-10">Loading...</div>;
+  if (loading || favoritesLoading) return <div className="text-center py-10">Loading...</div>;
 
   const favoriteCalcs = CALCULATORS.filter((c) => favorites.includes(c.id));
   // ponytail: sort by usage count (descending), calculators with 0 usage fall to end
@@ -109,7 +90,7 @@ export default function Dashboard({ user, onSignOut }) {
             {favoriteCalcs.map((calc) => (
               <button
                 key={calc.id}
-                onClick={() => navigate(`/${calc.category}/${calc.id}`)}
+                onClick={() => navigate(calc.path)}
                 className="inline-block text-sm px-4 py-2 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-full text-red-700 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors font-medium"
               >
                 {calc.name}
