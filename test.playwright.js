@@ -1,71 +1,59 @@
 import { test, expect } from '@playwright/test';
 
-test('shows setup screen when Firebase config missing', async ({ page }) => {
-  await page.goto('http://localhost:5173/');
+// needs a real account: TEST_USER_EMAIL / TEST_USER_PASSWORD. Without them these tests skip.
+const EMAIL = process.env.TEST_USER_EMAIL;
+const PASSWORD = process.env.TEST_USER_PASSWORD;
+const hasCreds = Boolean(EMAIL && PASSWORD);
 
-  // Wait for the setup screen to appear
+// ponytail: budgets are a first guess; tune after the first real run
+const DASHBOARD_MAX_MS = 3000;
+const DASHBOARD_MAX_FIRESTORE_REQUESTS = 4;
+
+async function signIn(page) {
+  await page.goto('/');
+  await page.locator('button:visible', { hasText: 'Sign In' }).first().click();
+  await page.locator('input[type="email"]').fill(EMAIL);
+  await page.locator('input[type="password"]').fill(PASSWORD);
+  await page.locator('button[type="submit"]', { hasText: 'Sign In' }).click();
+  // header of the sign-in modal goes away once signed in
+  await expect(page.locator('input[type="password"]')).toBeHidden({ timeout: 15000 });
+}
+
+test.skip('shows setup screen when Firebase config missing', async ({ page }) => {
+  // skipped: only shows when VITE_FIREBASE_* env vars are unset, and this checkout has them
+  await page.goto('http://localhost:5173/');
   await expect(page.locator('h2:has-text("Setup Required")')).toBeVisible({ timeout: 5000 });
-
-  // Verify setup instructions are visible
   await expect(page.locator('text=Firebase configuration is missing')).toBeVisible();
-  await expect(page.locator('text=Firebase Console')).toBeVisible();
-
-  console.log('✓ Setup screen displayed correctly');
 });
 
-test('Dashboard loads quickly after login', async ({ page, context }) => {
-  const navigationStartTime = Date.now();
+test.describe('Dashboard after login', () => {
+  test.skip(!hasCreds, 'set TEST_USER_EMAIL and TEST_USER_PASSWORD to run');
 
-  // Navigate to the app
-  await page.goto('http://localhost:5173/');
+  test('dashboard renders within budget', async ({ page }) => {
+    await signIn(page);
 
-  // Wait for app to fully load
-  await page.waitForLoadState('networkidle');
-  const appLoadTime = Date.now() - navigationStartTime;
-  console.log(`✓ App load time: ${appLoadTime}ms`);
+    const start = Date.now();
+    await page.goto('/dashboard');
+    await expect(page.locator('h1', { hasText: 'Welcome' })).toBeVisible({ timeout: DASHBOARD_MAX_MS * 3 });
+    const elapsed = Date.now() - start;
 
-  // Dashboard should be visible if user is logged in
-  // Check for dashboard content (header with user greeting)
-  const dashboardVisible = await Promise.race([
-    page.waitForSelector('h1', { timeout: 5000 }).then(() => true).catch(() => false),
-  ]);
-
-  const totalLoadTime = Date.now() - navigationStartTime;
-  console.log(`✓ Dashboard visible: ${dashboardVisible}, Total load: ${totalLoadTime}ms`);
-});
-
-test('Dashboard Firestore reads performance', async ({ page }) => {
-  // This test measures the actual performance of Firestore calls
-  // by instrumenting the page
-
-  await page.addInitScript(() => {
-    window.firebaseMetrics = {
-      docReads: [],
-      collectionReads: []
-    };
+    console.log(`dashboard render: ${elapsed}ms`);
+    expect(elapsed).toBeLessThan(DASHBOARD_MAX_MS);
   });
 
-  await page.goto('http://localhost:5173/');
+  test('dashboard makes few Firestore requests', async ({ page }) => {
+    await signIn(page);
 
-  // Wait for network idle to ensure all reads are done
-  await page.waitForLoadState('networkidle');
+    let firestoreRequests = 0;
+    page.on('request', (req) => {
+      if (req.url().includes('firestore.googleapis.com')) firestoreRequests++;
+    });
 
-  // Try to measure how long Firestore operations took
-  const readTime = await page.evaluate(() => {
-    const startMark = performance.getEntriesByName('navigationStart')[0];
-    const lastResource = performance.getEntriesByType('resource').pop();
-    if (lastResource && startMark) {
-      return lastResource.responseEnd - startMark.startTime;
-    }
-    return 0;
+    await page.goto('/dashboard');
+    await expect(page.locator('h1', { hasText: 'Welcome' })).toBeVisible({ timeout: 15000 });
+    await page.waitForLoadState('networkidle');
+
+    console.log(`firestore requests on dashboard: ${firestoreRequests}`);
+    expect(firestoreRequests).toBeLessThanOrEqual(DASHBOARD_MAX_FIRESTORE_REQUESTS);
   });
-
-  console.log(`Page interactive time from start: ${readTime}ms`);
-
-  // Measure time to First Contentful Paint
-  const paintEntries = await page.evaluate(() => {
-    return performance.getEntriesByType('paint');
-  });
-
-  console.log('Paint entries:', JSON.stringify(paintEntries, null, 2));
 });

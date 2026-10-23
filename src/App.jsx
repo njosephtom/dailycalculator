@@ -70,6 +70,7 @@ import Disclaimer           from "./pages/legal/Disclaimer";
 export default function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showSignIn, setShowSignIn] = useState(false);
 
   useEffect(() => {
     // ponytail: if Firebase config missing, skip auth init and show setup screen immediately
@@ -101,8 +102,6 @@ export default function App() {
       </div>
     );
   }
-
-  const [showSignIn, setShowSignIn] = useState(false);
 
   // Allow access without login - optional auth for saving favorites
   if (loading) return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
