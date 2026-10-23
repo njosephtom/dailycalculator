@@ -148,7 +148,12 @@ function TimeZoneCalculator() {
       <div className="flex justify-between items-end flex-wrap gap-4 border-b border-slate-200 dark:border-slate-700 pb-4 mb-4">
         <div>
           <div className="text-xs uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2">Time Zone Calculator</div>
-          <h1 className="text-2xl font-semibold">Meeting Time Finder</h1>
+          <h1 className="text-2xl font-semibold">
+            Meeting Time Finder
+            <span className="ml-2 align-middle text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300">
+              Beta
+            </span>
+          </h1>
         </div>
         <div className="flex gap-2 items-center">
           <select

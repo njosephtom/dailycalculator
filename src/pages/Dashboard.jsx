@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { collection, getDocs, query, orderBy, limit } from "firebase/firestore";
+import { collection, onSnapshot, query, orderBy, limit } from "firebase/firestore";
 import { db } from "../utils/firebase";
 import { useNavigate } from "react-router-dom";
 import { Heart } from "lucide-react";
@@ -22,34 +22,25 @@ const CALCULATORS = [
 
 export default function Dashboard({ user, onSignOut }) {
   // favorites come from FavoritesProvider (already loaded in App) - no second user-doc read
-  const { favorites, loading: favoritesLoading, toggleFavorite } = useFavorites();
+  const { favorites, toggleFavorite } = useFavorites();
   const [usage, setUsage] = useState({});
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!user) return;
-    const loadUsage = async () => {
-      try {
-        // top 20 by count; only 9 are displayed
-        const usageSnap = await getDocs(
-          query(collection(db, "users", user.uid, "usage"), orderBy("count", "desc"), limit(20))
-        );
+    // top 20 by count; only 9 are displayed. Snapshot serves cache first, then server.
+    return onSnapshot(
+      query(collection(db, "users", user.uid, "usage"), orderBy("count", "desc"), limit(20)),
+      (snap) => {
         const usageMap = {};
-        usageSnap.forEach((doc) => {
+        snap.forEach((doc) => {
           usageMap[doc.id] = doc.data().count || 0;
         });
         setUsage(usageMap);
-      } catch (err) {
-        console.error("Error loading usage:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadUsage();
+      },
+      (err) => console.error("Error loading usage:", err)
+    );
   }, [user]);
-
-  if (loading || favoritesLoading) return <div className="text-center py-10">Loading...</div>;
 
   const favoriteCalcs = CALCULATORS.filter((c) => favorites.includes(c.id));
   // ponytail: sort by usage count (descending), calculators with 0 usage fall to end

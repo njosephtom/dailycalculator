@@ -57,6 +57,15 @@ const MODES = [
   { v: "height",  l: "Scale by Height" },
 ];
 
+const PRESETS = [
+  { l: "720p",  w: 1280, h: 720 },
+  { l: "1080p", w: 1920, h: 1080 },
+  { l: "2K",    w: 2560, h: 1440 },
+  { l: "4K",    w: 3840, h: 2160 },
+  { l: "6K",    w: 6016, h: 3384 },
+  { l: "8K",    w: 7680, h: 4320 },
+];
+
 const FAQS = [
   {
     q: "What is an aspect ratio?",
@@ -138,6 +147,24 @@ export default function AspectRatio() {
             {/* Original dimensions — always visible */}
             <div>
               <SectionLabel text="Original Dimensions" />
+              <div className="flex gap-2 flex-wrap mb-3">
+                {PRESETS.map((p) => {
+                  const active = w === p.w && h === p.h;
+                  return (
+                    <button
+                      key={p.l}
+                      onClick={() => { setWidth(String(p.w)); setHeight(String(p.h)); }}
+                      className={`px-3 py-1 text-xs font-semibold rounded-full border transition-colors ${
+                        active
+                          ? "bg-indigo-600 border-indigo-600 text-white"
+                          : "border-slate-200 dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:border-slate-300"
+                      }`}
+                    >
+                      {p.l}
+                    </button>
+                  );
+                })}
+              </div>
               <div className="grid grid-cols-2 gap-4">
                 <InputField
                   label="Width"

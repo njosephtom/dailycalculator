@@ -41,6 +41,11 @@ function ToolCard({ tool }) {
         <div className="min-w-0">
           <h3 className="font-medium text-slate-800 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors text-sm leading-snug">
             {tool.name}
+            {tool.beta && (
+              <span className="ml-2 align-middle text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300">
+                Beta
+              </span>
+            )}
           </h3>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 leading-relaxed line-clamp-2">
             {tool.description}

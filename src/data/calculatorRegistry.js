@@ -180,6 +180,7 @@ export const calculatorRegistry = [
     path: "/time/time-zone-calculator",
     category: "time",
     implemented: true,
+    beta: true,
     description: "Compare current times across different cities and time zones worldwide. Add multiple cities to see their times simultaneously with automatic DST adjustment.",
     tags: ["time zone", "timezone", "world time", "utc", "daylight saving", "dst", "international time", "clock"],
   },
