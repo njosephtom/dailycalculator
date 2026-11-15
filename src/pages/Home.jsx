@@ -1,13 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { DollarSign, Calculator, ChefHat, Heart, ArrowLeftRight } from "lucide-react";
+import { DollarSign, Calculator, ChefHat, Heart, ArrowLeftRight, FileText } from "lucide-react";
 import { calculatorRegistry, categoryMeta } from "../data/calculatorRegistry";
 import PageSEO from "../components/ui/PageSEO";
 import AdSenseUnit from "../components/ads/AdSenseUnit";
+import { canSeeCategory } from "../utils/pdfAccess";
 
-const ICON_MAP = { DollarSign, Calculator, ChefHat, Heart, ArrowLeftRight };
+const ICON_MAP = { DollarSign, Calculator, ChefHat, Heart, ArrowLeftRight, FileText };
 
-export default function Home() {
+export default function Home({ user }) {
   const schema = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
@@ -41,7 +42,7 @@ export default function Home() {
 
       {/* Category cards */}
       <div className="space-y-4">
-        {Object.entries(categoryMeta).map(([catKey, meta]) => {
+        {Object.entries(categoryMeta).filter(([catKey]) => canSeeCategory(catKey, user)).map(([catKey, meta]) => {
           const Icon = ICON_MAP[meta.icon] ?? Calculator;
           const tools = calculatorRegistry.filter((c) => c.category === catKey);
           return (

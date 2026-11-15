@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
+import React, { useState, useEffect, lazy, Suspense } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { Analytics } from "@vercel/analytics/react";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth, firebaseConfigMissing } from "./utils/firebase";
 import { ThemeProvider } from "./context/ThemeContext";
 import { CalculatorRegistryProvider } from "./context/CalculatorRegistryContext";
 import { FavoritesProvider } from "./context/FavoritesContext";
+import { canUsePdfTools } from "./utils/pdfAccess";
 import Layout from "./components/layout/Layout";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
@@ -57,6 +58,11 @@ import CookingConverter     from "./pages/cooking/CookingConverter";
 import AspectRatio          from "./pages/tech/AspectRatio";
 import ByteConverter        from "./pages/tech/ByteConverter";
 
+// Tools (beta)
+import PdfTools             from "./pages/tools/PdfTools";
+const PdfEditor = lazy(() => import("./pages/tools/PdfEditor")); // pdf.js loads only on this route
+const SignPdf = lazy(() => import("./pages/tools/SignPdf"));
+
 // Convert
 import LengthWeight         from "./pages/convert/LengthWeight";
 import WeightConverter      from "./pages/convert/WeightConverter";
@@ -66,6 +72,11 @@ import LengthConverter      from "./pages/convert/LengthConverter";
 import PrivacyPolicy        from "./pages/legal/PrivacyPolicy";
 import TermsOfUse           from "./pages/legal/TermsOfUse";
 import Disclaimer           from "./pages/legal/Disclaimer";
+
+// PDF Tools route guard: localhost + allowed accounts only, otherwise back to home.
+function PdfGate({ user, children }) {
+  return canUsePdfTools(user) ? children : <Navigate to="/" replace />;
+}
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -108,16 +119,16 @@ export default function App() {
 
   return (
     <ThemeProvider>
-      <CalculatorRegistryProvider>
+      <CalculatorRegistryProvider user={user}>
         <FavoritesProvider user={user}>
           {showSignIn && <SignInPage onSignIn={(u) => { setUser(u); setShowSignIn(false); }} onClose={() => setShowSignIn(false)} />}
           <Routes>
             <Route path="/" element={<Layout user={user} onSignIn={() => setShowSignIn(true)} onSignOut={handleSignOut} />}>
-              <Route index element={<Home />} />
-              <Route path="dashboard" element={user ? <Dashboard user={user} onSignOut={handleSignOut} /> : <Home />} />
+              <Route index element={<Home user={user} />} />
+              <Route path="dashboard" element={user ? <Dashboard user={user} onSignOut={handleSignOut} /> : <Home user={user} />} />
 
               {/* Category hub pages */}
-              <Route path=":category" element={<CategoryHub />} />
+              <Route path=":category" element={<CategoryHub user={user} />} />
 
             {/* ── Finance ── */}
             <Route path="finance/compound-interest"           element={<CompoundInterest />} />
@@ -162,6 +173,10 @@ export default function App() {
             {/* ── Tech ── */}
             <Route path="tech/aspect-ratio-calculator"       element={<AspectRatio />} />
             <Route path="tech/byte-converter"                element={<ByteConverter />} />
+            <Route path="pdf-tools"                          element={<PdfGate user={user}><PdfTools /></PdfGate>} />
+            <Route path="pdf-tools/edit"                     element={<PdfGate user={user}><Suspense fallback={<div className="p-6 text-sm">Loading editor…</div>}><PdfEditor /></Suspense></PdfGate>} />
+            <Route path="pdf-tools/sign"                     element={<PdfGate user={user}><Suspense fallback={<div className="p-6 text-sm">Loading…</div>}><SignPdf /></Suspense></PdfGate>} />
+            <Route path="pdf-tools/:tool"                    element={<PdfGate user={user}><PdfTools /></PdfGate>} />
 
             {/* ── Convert ── */}
             <Route path="convert/length-weight"              element={<LengthWeight />} />

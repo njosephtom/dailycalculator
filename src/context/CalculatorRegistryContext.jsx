@@ -1,13 +1,15 @@
 import React, { createContext, useContext, useState } from "react";
 import { calculatorRegistry } from "../data/calculatorRegistry";
+import { canSeeCategory } from "../utils/pdfAccess";
 
 const CalculatorRegistryContext = createContext(null);
 
-export function CalculatorRegistryProvider({ children }) {
+export function CalculatorRegistryProvider({ children, user }) {
   const [searchQuery, setSearchQuery] = useState("");
+  const visibleRegistry = calculatorRegistry.filter((c) => canSeeCategory(c.category, user));
 
   const filteredResults = searchQuery.trim()
-    ? calculatorRegistry.filter(
+    ? visibleRegistry.filter(
         (calc) =>
           calc.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
           calc.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -17,7 +19,7 @@ export function CalculatorRegistryProvider({ children }) {
 
   return (
     <CalculatorRegistryContext.Provider
-      value={{ registry: calculatorRegistry, searchQuery, setSearchQuery, filteredResults }}
+      value={{ registry: visibleRegistry, searchQuery, setSearchQuery, filteredResults }}
     >
       {children}
     </CalculatorRegistryContext.Provider>
