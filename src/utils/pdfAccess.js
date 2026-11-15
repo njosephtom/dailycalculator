@@ -9,6 +9,9 @@ export function canUsePdfTools(user) {
   return !!email && PDF_TOOLS_EMAILS.includes(email);
 }
 
+// PDF API base. Default is the same-origin /api/pdf; set VITE_PDF_API_URL to the Render service URL.
+export const PDF_API_URL = import.meta.env.VITE_PDF_API_URL || "/api/pdf";
+
 // Category visibility for menus and hubs. Only "pdf" is gated.
 export function canSeeCategory(category, user) {
   return category !== "pdf" || canUsePdfTools(user);

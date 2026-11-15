@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as pdfjs from "pdfjs-dist";
 import workerUrl from "pdfjs-dist/build/pdf.worker.min.mjs?url";
+import { PDF_API_URL } from "../../utils/pdfAccess";
 import {
   MousePointer2, Type, Highlighter, Underline, Strikethrough, Square, Stamp,
   ImagePlus, Shapes, Pen, Eraser, Replace, SpellCheck, Undo2, Download,
@@ -335,7 +336,7 @@ export default function PdfEditor() {
       body.append("ops", JSON.stringify(ops.map(({ id, previewUrl, ...op }) => op)));
       body.append("file", file);
       uploads.forEach((u) => body.append("upload", u));
-      const res = await fetch("/api/pdf", { method: "POST", body });
+      const res = await fetch(PDF_API_URL, { method: "POST", body });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
         throw new Error(data.error || `Save failed (${res.status}). Files over 4.5 MB are too large.`);

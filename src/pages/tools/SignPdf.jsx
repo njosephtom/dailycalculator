@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import * as pdfjs from "pdfjs-dist";
 import workerUrl from "pdfjs-dist/build/pdf.worker.min.mjs?url";
 import PageSEO from "../../components/ui/PageSEO";
+import { PDF_API_URL } from "../../utils/pdfAccess";
 
 pdfjs.GlobalWorkerOptions.workerSrc = workerUrl;
 
@@ -146,7 +147,7 @@ export default function SignPdf() {
       }
       body.append("options", JSON.stringify(options));
       body.append("file", file);
-      const res = await fetch("/api/pdf", { method: "POST", body });
+      const res = await fetch(PDF_API_URL, { method: "POST", body });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
         throw new Error(data.error || `Signing failed (${res.status}). Files over 4.5 MB are too large.`);

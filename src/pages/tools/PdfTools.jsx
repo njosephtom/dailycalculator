@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import PageSEO from "../../components/ui/PageSEO";
 import CalculatorTitle from "../../components/ui/CalculatorTitle";
 import SelectField from "../../components/ui/SelectField";
+import { PDF_API_URL } from "../../utils/pdfAccess";
 
 // Field = one option of a python/pdf script. `flag` is the CLI flag it maps to.
 const FIELDS = {
@@ -113,7 +114,7 @@ export default function PdfTools() {
     setBusy(true);
     setStatus("Processing…");
     try {
-      const res = await fetch("/api/pdf", { method: "POST", body });
+      const res = await fetch(PDF_API_URL, { method: "POST", body });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
         throw new Error(data.error || `Request failed (${res.status}). Large files may exceed the 4.5 MB limit.`);
