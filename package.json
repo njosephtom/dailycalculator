@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
-    "firebase": "^12.18.0",
+    "firebase": "^13.3.0",
     "katex": "^0.17.0",
     "lucide-react": "^0.441.0",
     "pdfjs-dist": "6.4.299",
@@ -27,5 +27,8 @@
     "postcss": "^8.4.45",
     "tailwindcss": "^3.4.11",
     "vite": "^5.4.1"
+  },
+  "overrides": {
+    "@grpc/grpc-js": "^1.14.7"
   }
 }
