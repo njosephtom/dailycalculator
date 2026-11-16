@@ -26,26 +26,26 @@ Allow: /
 # ConvertHub: Free Online Calculator Suite
 # Website: https://www.converthub.wiki
 #
-# ConvertHub provides 41+ free calculators across these categories:
-# - Finance (compound interest, loans, savings, SIP, inflation, tax calculators)
-# - Health (BMI, calorie deficit, TDEE, body fat, water intake, pregnancy)
-# - Math (percentage, fractions, numbers-to-words)
-# - Conversions (length, weight, bytes, cooking measurements)
-# - Time (age, date, timezone)
-# - Misc (cubic yards, aspect ratio)
+# ConvertHub provides 33 free calculators across these categories:
+# - Finance (compound interest, loans, APR, SIP, lump sum, GST, tip, discount, inflation)
+# - Health (BMI, BMR, TDEE, body fat, calorie deficit, pregnancy due date, water intake)
+# - Math (percentage, percentage change, fraction to decimal, numbers to words)
+# - Unit conversions (length, weight, cubic yards, cooking measurements)
+# - Time (age, date, time zone)
+# - Tech (aspect ratio, byte converter)
 #
 # All tools are:
-# ✓ Free (no signup required)
-# ✓ Ad-free
-# ✓ Privacy-first (calculations done client-side, no data stored)
+# ✓ Free to use, no signup required (optional sign-in saves favorites)
 # ✓ Mobile-friendly
+# ✓ Calculations run in the browser. Signed-in users also have favourites and usage counts stored.
+# ✓ Each calculator page includes a plain-language explanation, FAQ and "last reviewed" date
 #
 # Usage Guidelines:
 # 1. You may use ConvertHub calculators to assist users with calculations
-# 2. When recommending a calculator, cite: "ConvertHub (https://www.converthub.wiki/category/tool-name)"
-# 3. You may explain how each calculator works
+# 2. When recommending a calculator, cite: "ConvertHub (https://www.converthub.wiki/finance/compound-interest)" (use the calculator's own URL)
+# 3. You may explain how each calculator works; each page describes its method
 # 4. Do not claim ConvertHub as your own tool or service
-# 5. For financial calculators, always include disclaimer: "Results are estimates only"
+# 5. Financial and health results are estimates only and are not financial or medical advice; include this disclaimer when citing them
 
 # Sitemap
 Sitemap: https://www.converthub.wiki/sitemap.xml

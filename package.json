@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node scripts/prerender.js",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.64.1",
+    "@sparticuz/chromium": "^153.0.0",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.20",
     "playwright": "^1.63.0",
