@@ -9,9 +9,19 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { execSync } from "node:child_process";
 import { chromium } from "playwright";
+import { loadEnv } from "vite";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const dist = path.join(root, "dist");
+
+// Without Firebase config the app shows only its "Setup Required" screen, so there is
+// nothing to prerender. Plain CI builds (GitHub Actions has no secrets) skip here; Vercel
+// builds, which pull the project env, still fail loudly if the config is missing.
+const env = loadEnv("production", root, "VITE_");
+if (!env.VITE_FIREBASE_API_KEY && !process.env.VERCEL) {
+  console.log("prerender skipped: no VITE_FIREBASE_* config in this build (CI check build)");
+  process.exit(0);
+}
 
 const sitemap = await readFile(path.join(root, "public/sitemap.xml"), "utf8");
 const routes = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => new URL(m[1]).pathname);
