@@ -4,6 +4,7 @@ import { calculatorRegistry, categoryMeta } from "../data/calculatorRegistry";
 import { ArrowRight, CheckCircle, Clock, Search, X, Heart } from "lucide-react";
 import { useFavorites } from "../context/FavoritesContext";
 import AdGrid from "../components/ads/AdGrid";
+import { canSeeCategory } from "../utils/pdfAccess";
 
 function groupBySubcategory(tools) {
   const map = new Map();
@@ -72,10 +73,10 @@ function ToolCard({ tool }) {
   );
 }
 
-export default function CategoryHub() {
+export default function CategoryHub({ user }) {
   const { category } = useParams();
   const [query, setQuery] = useState("");
-  const meta = categoryMeta[category];
+  const meta = canSeeCategory(category, user) ? categoryMeta[category] : undefined;
   const allTools = calculatorRegistry.filter((c) => c.category === category && !c.hidden);
 
   if (!meta) {

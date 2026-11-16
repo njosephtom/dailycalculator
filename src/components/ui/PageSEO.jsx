@@ -31,7 +31,9 @@ export default function PageSEO({ title, description, path, schema }) {
       <meta property="og:url" content={url} />
       <meta property="og:type" content="website" />
       <meta property="og:site_name" content={SITE_NAME} />
-      <meta name="twitter:card" content="summary" />
+      <meta property="og:image" content={`${BASE_URL}/og-image.png`} />
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:image" content={`${BASE_URL}/og-image.png`} />
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={finalDesc} />
       <meta name="robots" content="index, follow" />

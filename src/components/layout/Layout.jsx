@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Outlet, useLocation, Link } from "react-router-dom";
 import {
   DollarSign, Calculator, ChefHat, Heart, Clock,
-  ArrowLeftRight, Wrench, Monitor, ChevronLeft, ChevronRight, Menu, User,
+  ArrowLeftRight, Wrench, Monitor, FileText, ChevronLeft, ChevronRight, Menu, User,
 } from "lucide-react";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
@@ -11,9 +11,10 @@ import PageSEO from "../ui/PageSEO";
 import AdSenseUnit from "../ads/AdSenseUnit";
 import { calculatorRegistry, categoryMeta } from "../../data/calculatorRegistry";
 import { useTrackUsage } from "../../hooks/useTrackUsage";
+import { canSeeCategory } from "../../utils/pdfAccess";
 
-const ICON_MAP = { DollarSign, Calculator, ChefHat, Heart, Clock, ArrowLeftRight, Wrench, Monitor };
-const CATEGORY_ORDER = ["finance", "math", "time", "health", "cooking", "convert", "tech", "misc"];
+const ICON_MAP = { DollarSign, Calculator, ChefHat, Heart, Clock, ArrowLeftRight, Wrench, Monitor, FileText };
+const CATEGORY_ORDER = ["finance", "math", "time", "health", "cooking", "convert", "tech", "misc", "pdf"];
 
 function usePageSEO() {
   const { pathname } = useLocation();
@@ -85,7 +86,7 @@ export default function Layout({ user, onSignIn, onSignOut }) {
             </button>
           )}
 
-          {CATEGORY_ORDER.map((cat) => {
+          {CATEGORY_ORDER.filter((cat) => canSeeCategory(cat, user)).map((cat) => {
             const meta = categoryMeta[cat];
             if (!meta) return null;
             const Icon = ICON_MAP[meta.icon];
@@ -94,7 +95,7 @@ export default function Layout({ user, onSignIn, onSignOut }) {
             return Icon ? (
               <Link
                 key={cat}
-                to={`/${cat}`}
+                to={meta.href ?? `/${cat}`}
                 className={`p-2.5 rounded-lg transition-colors ${
                   isActive
                     ? `${colorClass} bg-slate-100 dark:bg-slate-700`

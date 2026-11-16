@@ -23,8 +23,6 @@
   <url><loc>https://www.converthub.wiki/math/percentage-change-calculator</loc><priority>0.8</priority></url>
   <url><loc>https://www.converthub.wiki/math/fraction-to-decimal-calculator</loc><priority>0.8</priority></url>
   <url><loc>https://www.converthub.wiki/misc/cubic-yards-calculator</loc><priority>0.7</priority></url>
-  <url><loc>https://www.converthub.wiki/misc/age-calculator</loc><priority>0.9</priority></url>
-  <url><loc>https://www.converthub.wiki/misc/date-calculator</loc><priority>0.9</priority></url>
   <url><loc>https://www.converthub.wiki/cooking/cooking-converter</loc><priority>0.9</priority></url>
   <url><loc>https://www.converthub.wiki/health/bmi-bmr</loc><priority>0.8</priority></url>
   <url><loc>https://www.converthub.wiki/health/bmi-calculator</loc><priority>0.9</priority></url>
@@ -39,4 +37,8 @@
   <url><loc>https://www.converthub.wiki/convert/length-converter</loc><priority>0.8</priority></url>
   <url><loc>https://www.converthub.wiki/tech/aspect-ratio-calculator</loc><priority>0.8</priority></url>
   <url><loc>https://www.converthub.wiki/tech/byte-converter</loc><priority>0.8</priority></url>
+  <url><loc>https://www.converthub.wiki/time/age-calculator</loc><priority>0.9</priority></url>
+  <url><loc>https://www.converthub.wiki/time/date-calculator</loc><priority>0.9</priority></url>
+  <url><loc>https://www.converthub.wiki/time/time-zone-calculator</loc><priority>0.8</priority></url>
+  <url><loc>https://www.converthub.wiki/math/numbers-to-words-converter</loc><priority>0.7</priority></url>
 </urlset>

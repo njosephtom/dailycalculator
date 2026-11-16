@@ -2,11 +2,12 @@ import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   DollarSign, Calculator, ChefHat, Heart, Clock,
-  ArrowLeftRight, Wrench, Monitor, ChevronDown, ChevronRight, X, User, LogOut,
+  ArrowLeftRight, Wrench, Monitor, FileText, ChevronDown, ChevronRight, X, User, LogOut,
 } from "lucide-react";
 import { calculatorRegistry, categoryMeta } from "../../data/calculatorRegistry";
+import { canSeeCategory } from "../../utils/pdfAccess";
 
-const ICON_MAP = { DollarSign, Calculator, ChefHat, Heart, Clock, ArrowLeftRight, Wrench, Monitor };
+const ICON_MAP = { DollarSign, Calculator, ChefHat, Heart, Clock, ArrowLeftRight, Wrench, Monitor, FileText };
 
 const COLOR = {
   emerald: { icon: "text-emerald-600 dark:text-emerald-400", bg: "bg-emerald-50 dark:bg-emerald-900/20", active: "text-emerald-700 dark:text-emerald-300" },
@@ -19,7 +20,7 @@ const COLOR = {
   cyan:    { icon: "text-cyan-600 dark:text-cyan-400",       bg: "bg-cyan-50 dark:bg-cyan-900/20",       active: "text-cyan-700 dark:text-cyan-300"      },
 };
 
-const CATEGORY_ORDER = ["finance", "math", "time", "health", "cooking", "convert", "tech", "misc"];
+const CATEGORY_ORDER = ["finance", "math", "time", "health", "cooking", "convert", "tech", "misc", "pdf"];
 
 const grouped = CATEGORY_ORDER.reduce((acc, cat) => {
   acc[cat] = calculatorRegistry.filter((c) => c.category === cat && !c.hidden);
@@ -109,7 +110,7 @@ export default function Sidebar({ onClose, collapsed = false, user, onSignIn, on
 
       {/* Tree nav */}
       <nav className="flex-1 overflow-y-auto px-2 py-3 space-y-0.5">
-        {CATEGORY_ORDER.map((cat) => {
+        {CATEGORY_ORDER.filter((cat) => canSeeCategory(cat, user)).map((cat) => {
           const meta = categoryMeta[cat];
           if (!meta) return null;
 
@@ -123,7 +124,7 @@ export default function Sidebar({ onClose, collapsed = false, user, onSignIn, on
             <div key={cat}>
               {/* Category row */}
               <Link
-                to={`/${cat}`}
+                to={meta.href ?? `/${cat}`}
                 onClick={() => {
                   setOpen((prev) => ({ ...prev, [cat]: !prev[cat] }));
                   onClose?.();
