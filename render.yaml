@@ -1,0 +1,14 @@
+# Render Blueprint for the PDF API (server.py -> backend/pdf.py -> backend/pdf_scripts/*).
+# The Vite frontend is hosted on Vercel; this service only runs the Python PDF tools.
+services:
+  - type: web
+    name: dailycalculator
+    runtime: python
+    plan: free
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: python server.py
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.2
+      - key: PDF_CORS_ORIGINS
+        value: https://www.converthub.wiki,http://localhost:5173
