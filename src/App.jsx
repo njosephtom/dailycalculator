@@ -11,7 +11,9 @@ import Layout from "./components/layout/Layout";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import CategoryHub from "./pages/CategoryHub";
-import ComingSoon from "./pages/ComingSoon";
+import NotFound from "./pages/NotFound";
+import About from "./pages/info/About";
+import Contact from "./pages/info/Contact";
 import SignInPage from "./components/auth/SignInPage";
 
 // Finance
@@ -188,8 +190,12 @@ export default function App() {
             <Route path="terms-of-use"                        element={<TermsOfUse />} />
             <Route path="disclaimer"                          element={<Disclaimer />} />
 
-            {/* Catch-all */}
-            <Route path="*" element={<ComingSoon />} />
+            {/* ── Site info ── */}
+            <Route path="about"                               element={<About />} />
+            <Route path="contact"                             element={<Contact />} />
+
+            {/* Catch-all: unknown URLs get a noindex not-found page */}
+            <Route path="*" element={<NotFound />} />
           </Route>
           </Routes>
           <Analytics />

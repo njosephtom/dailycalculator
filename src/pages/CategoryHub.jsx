@@ -5,6 +5,7 @@ import { ArrowRight, CheckCircle, Clock, Search, X, Heart } from "lucide-react";
 import { useFavorites } from "../context/FavoritesContext";
 import AdGrid from "../components/ads/AdGrid";
 import { canSeeCategory } from "../utils/pdfAccess";
+import NotFound from "./NotFound";
 
 function groupBySubcategory(tools) {
   const map = new Map();
@@ -79,16 +80,8 @@ export default function CategoryHub({ user }) {
   const meta = canSeeCategory(category, user) ? categoryMeta[category] : undefined;
   const allTools = calculatorRegistry.filter((c) => c.category === category && !c.hidden);
 
-  if (!meta) {
-    return (
-      <div className="text-center py-20 text-slate-500 dark:text-slate-400">
-        <p className="text-lg font-medium">Category not found.</p>
-        <Link to="/" className="mt-2 inline-block text-sm text-indigo-600 hover:underline">
-          ← Back to Home
-        </Link>
-      </div>
-    );
-  }
+  // Unknown or gated category (e.g. /pdf when not allowed): same noindex page as other unknown URLs
+  if (!meta) return <NotFound />;
 
   const filtered = query.trim()
     ? allTools.filter(
