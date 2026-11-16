@@ -41,6 +41,16 @@ const origin = `http://127.0.0.1:${server.address().port}`;
 // Vercel's build image ships without Playwright's browser. If it is missing, download
 // the version this project uses (same as `npx playwright install chromium`) and retry.
 async function launchBrowser() {
+  // On Vercel, use the Chromium from @sparticuz/chromium: it ships the shared libraries
+  // (libnspr4 etc.) that the build image lacks, so Playwright's own download can't start.
+  if (process.env.VERCEL) {
+    const { default: sparticuz } = await import("@sparticuz/chromium");
+    return chromium.launch({
+      executablePath: await sparticuz.executablePath(),
+      args: ["--no-sandbox", "--disable-dev-shm-usage"],
+      headless: true,
+    });
+  }
   try {
     return await chromium.launch();
   } catch (err) {
