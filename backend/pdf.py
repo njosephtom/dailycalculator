@@ -1,6 +1,6 @@
 """PDF Tools endpoint (Vercel Python function). Beta.
 
-Runs the scripts in python/pdf/ as subprocesses, so they stay the single source of truth.
+Runs the scripts in backend/pdf_scripts/ as subprocesses, so they stay the single source of truth.
 POST multipart/form-data:
   tool     edit | merge | optimize | sign | to_image | to_pptx | to_word
   options  JSON object, e.g. {"command": "text", "--page": "1", "--bookmarks": true}
@@ -20,7 +20,7 @@ from email.policy import default
 from http.server import BaseHTTPRequestHandler
 from pathlib import Path
 
-SCRIPTS = Path(__file__).resolve().parent.parent / "python" / "pdf"
+SCRIPTS = Path(__file__).resolve().parent / "pdf_scripts"
 TOOLS = {  # tool -> (script, result extension)
     "edit": ("pdf_edit.py", "pdf"),
     "merge": ("pdf_merge.py", "pdf"),
