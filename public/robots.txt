@@ -15,4 +15,3 @@ User-agent: PerplexityBot
 Allow: /
 
 Sitemap: https://www.converthub.wiki/sitemap.xml
-Sitemap: https://converthub.wiki/sitemap.xml

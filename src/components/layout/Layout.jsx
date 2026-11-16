@@ -8,6 +8,7 @@ import Header from "./Header";
 import Sidebar from "./Sidebar";
 import Footer from "./Footer";
 import PageSEO from "../ui/PageSEO";
+import CalculatorInfo from "./CalculatorInfo";
 import AdSenseUnit from "../ads/AdSenseUnit";
 import { calculatorRegistry, categoryMeta } from "../../data/calculatorRegistry";
 import { useTrackUsage } from "../../hooks/useTrackUsage";
@@ -16,11 +17,47 @@ import { canSeeCategory } from "../../utils/pdfAccess";
 const ICON_MAP = { DollarSign, Calculator, ChefHat, Heart, Clock, ArrowLeftRight, Wrench, Monitor, FileText };
 const CATEGORY_ORDER = ["finance", "math", "time", "health", "cooking", "convert", "tech", "misc", "pdf"];
 
+const APP_CATEGORY = {
+  finance: "FinanceApplication",
+  health: "HealthApplication",
+  cooking: "LifestyleApplication",
+};
+
+// WebApplication + BreadcrumbList JSON-LD for each calculator (free, browser-based).
+// The breadcrumb matches the visible one rendered above the calculator.
+function calculatorSchema(calc) {
+  const base = "https://www.converthub.wiki";
+  const categoryName = categoryMeta[calc.category]?.label ?? calc.category;
+  return [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      name: calc.name,
+      description: calc.description,
+      url: `${base}${calc.path}`,
+      applicationCategory: APP_CATEGORY[calc.category] ?? "UtilitiesApplication",
+      operatingSystem: "Any",
+      browserRequirements: "Requires JavaScript",
+      isAccessibleForFree: true,
+      offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: `${base}/` },
+        { "@type": "ListItem", position: 2, name: categoryName, item: `${base}/${calc.category}` },
+        { "@type": "ListItem", position: 3, name: calc.name, item: `${base}${calc.path}` },
+      ],
+    },
+  ];
+}
+
 function usePageSEO() {
   const { pathname } = useLocation();
   const calc = calculatorRegistry.find(c => c.path === pathname);
   if (calc) {
-    return { title: calc.name, description: calc.description, path: calc.path };
+    return { title: calc.name, description: calc.description, path: calc.path, schema: calculatorSchema(calc) };
   }
   const catKey = pathname.replace(/^\//, "");
   const cat = categoryMeta[catKey];
@@ -48,18 +85,19 @@ export default function Layout({ user, onSignIn, onSignOut }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [desktopCollapsed, setDesktopCollapsed] = useState(false);
   const seo = usePageSEO();
+  const calc = seo.schema ? calculatorRegistry.find((c) => c.path === seo.path) : null;
   const { pathname } = useLocation();
   const activeCategory = pathname.split("/")[1] || "";
   useTrackUsage(user);
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 transition-colors duration-200 flex flex-col">
-      <PageSEO title={seo.title} description={seo.description} path={seo.path} />
+      <PageSEO title={seo.title} description={seo.description} path={seo.path} schema={seo.schema} />
       <Header user={user} onSignIn={onSignIn} onSignOut={onSignOut} />
 
       {/* Top AdSense Banner */}
       <div className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 flex justify-center py-2 overflow-x-auto">
-        <AdSenseUnit slot="leaderboard" className="min-w-max" />
+        <AdSenseUnit slot="leaderboard" className="min-w-max min-h-[50px] md:min-h-[90px]" />
       </div>
 
       <div className="flex flex-1 w-full">
@@ -146,13 +184,25 @@ export default function Layout({ user, onSignIn, onSignOut }) {
 
         {/* ── Main content ── */}
         <main className="flex-1 min-w-0 px-4 sm:px-6 py-6 max-w-7xl mx-auto">
+          {calc && (
+            <nav aria-label="Breadcrumb" className="text-xs text-slate-500 dark:text-slate-400 mb-4">
+              <ol className="flex flex-wrap items-center gap-1">
+                <li><Link to="/" className="hover:underline">Home</Link></li>
+                <li aria-hidden="true">›</li>
+                <li><Link to={`/${calc.category}`} className="hover:underline">{categoryMeta[calc.category]?.label ?? calc.category}</Link></li>
+                <li aria-hidden="true">›</li>
+                <li aria-current="page">{calc.name}</li>
+              </ol>
+            </nav>
+          )}
           <Outlet />
+          {calc && <CalculatorInfo calc={calc} />}
         </main>
       </div>
 
       {/* Bottom AdSense Banner */}
       <div className="bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 flex justify-center py-2 overflow-x-auto">
-        <AdSenseUnit slot="leaderboard" className="min-w-max" />
+        <AdSenseUnit slot="leaderboard" className="min-w-max min-h-[50px] md:min-h-[90px]" />
       </div>
 
       <Footer />

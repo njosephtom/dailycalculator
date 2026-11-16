@@ -1,5 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { calculatorRegistry } from "../data/calculatorRegistry";
 import { Clock, ArrowLeft, CheckCircle } from "lucide-react";
 
@@ -16,6 +17,13 @@ export default function ComingSoon() {
 
   return (
     <div className="space-y-6">
+      {!tool && (
+        // nested Helmet overrides Layout's robots tag: unknown URLs must not be indexed
+        <Helmet>
+          <title>Page not found | ConvertHub</title>
+          <meta name="robots" content="noindex, follow" />
+        </Helmet>
+      )}
       <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-10 text-center">
         <div className="inline-flex items-center justify-center w-14 h-14 bg-indigo-50 dark:bg-indigo-900/30 rounded-full mb-4">
           <Clock size={26} className="text-indigo-500" />

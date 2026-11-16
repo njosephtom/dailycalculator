@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
+import { CATEGORY_INTRO } from "../data/calculatorContent";
 import { calculatorRegistry, categoryMeta } from "../data/calculatorRegistry";
 import { ArrowRight, CheckCircle, Clock, Search, X, Heart } from "lucide-react";
 import { useFavorites } from "../context/FavoritesContext";
@@ -82,6 +84,11 @@ export default function CategoryHub({ user }) {
   if (!meta) {
     return (
       <div className="text-center py-20 text-slate-500 dark:text-slate-400">
+        {/* nested Helmet overrides Layout's robots tag: unknown categories must not be indexed */}
+        <Helmet>
+          <title>Page not found | ConvertHub</title>
+          <meta name="robots" content="noindex, follow" />
+        </Helmet>
         <p className="text-lg font-medium">Category not found.</p>
         <Link to="/" className="mt-2 inline-block text-sm text-indigo-600 hover:underline">
           ← Back to Home
@@ -113,6 +120,9 @@ export default function CategoryHub({ user }) {
               {meta.label} Calculators
             </h1>
             <p className="text-slate-500 dark:text-slate-400 mt-1 text-sm">{meta.description}</p>
+            {CATEGORY_INTRO[category] && (
+              <p className="text-sm text-slate-600 dark:text-slate-300 mt-3 max-w-2xl leading-relaxed">{CATEGORY_INTRO[category]}</p>
+            )}
           </div>
           <div className="flex gap-3 text-xs shrink-0">
             <span className="flex items-center gap-1.5 px-2.5 py-1 bg-slate-100 dark:bg-slate-700 rounded-full text-slate-600 dark:text-slate-300">
