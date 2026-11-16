@@ -7,3 +7,6 @@ dist
 *.png
 *.mjs
 test_*.js
+
+.vercel
+.env*
