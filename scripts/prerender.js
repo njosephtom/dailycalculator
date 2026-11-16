@@ -7,6 +7,7 @@ import { createServer } from "node:http";
 import { readFile, writeFile, mkdir, stat } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { execSync } from "node:child_process";
 import { chromium } from "playwright";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -37,7 +38,20 @@ const server = createServer(async (req, res) => {
 await new Promise((r) => server.listen(0, "127.0.0.1", r));
 const origin = `http://127.0.0.1:${server.address().port}`;
 
-const browser = await chromium.launch();
+// Vercel's build image ships without Playwright's browser. If it is missing, download
+// the version this project uses (same as `npx playwright install chromium`) and retry.
+async function launchBrowser() {
+  try {
+    return await chromium.launch();
+  } catch (err) {
+    if (!/Executable doesn't exist/.test(err.message)) throw err;
+    console.log("Playwright browser missing, installing chromium...");
+    execSync("npx playwright install chromium", { stdio: "inherit" });
+    return chromium.launch();
+  }
+}
+
+const browser = await launchBrowser();
 let failures = 0;
 try {
   for (const route of routes) {
