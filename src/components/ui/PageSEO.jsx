@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet-async";
 const SITE_NAME = "ConvertHub";
 const BASE_URL = "https://www.converthub.wiki";
 
-export default function PageSEO({ title, description, path, schema }) {
+export default function PageSEO({ title, description, path, schema, noindex = false }) {
   const fullTitle = title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} — Free Online Calculators`;
   const url = path ? `${BASE_URL}${path}` : BASE_URL;
   const defaultDesc = "Free online calculators for finance, health, math, cooking, tech, and everyday tools.";
@@ -36,7 +36,7 @@ export default function PageSEO({ title, description, path, schema }) {
       <meta name="twitter:image" content={`${BASE_URL}/og-image.png`} />
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={finalDesc} />
-      <meta name="robots" content="index, follow" />
+      <meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow"} />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       {/* JSON-LD Schema Markup */}
       <script type="application/ld+json">{JSON.stringify(appSchema)}</script>

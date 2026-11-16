@@ -1,4 +1,4 @@
-"""Render web service for the PDF API: serves api/pdf.py's handler on $PORT.
+"""Render web service for the PDF API: serves backend/pdf.py's handler on $PORT.
 
 Env:
   PORT                 set by Render (default 8000 locally)
@@ -8,7 +8,7 @@ Env:
 import os
 from http.server import ThreadingHTTPServer
 
-from api.pdf import handler
+from backend.pdf import handler
 
 ORIGINS = {o.strip() for o in os.environ.get("PDF_CORS_ORIGINS", "http://localhost:5173").split(",") if o.strip()}
 
